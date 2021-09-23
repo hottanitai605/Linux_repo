@@ -1,0 +1,76 @@
+
+
+>>> Nexus Installation :
+========================
+
+ # yum install epel-release -y 
+ 
+ # yum install vim wget net-tools bind-utils -y 
+ 
+ # yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel -y
+
+ # useradd nexus 
+
+ # visudo 
+
+  nexus ALL=(ALL)  :NOPASSWD ALL 
+
+:wq
+
+ # wget -O /opt/nexus.tar.gz  https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+
+ #  cd /opt/
+ 
+ # tar -xvf nexus.tar.gz 
+ 
+ # ls -l 
+ 
+ # mv nexus-3* nexus 
+ 
+ # chown -Rv nexus:nexus nexus sonatype-work
+
+ # vim /opt/nexus/bin/nexus.rc
+  run_as_user="nexus"
+ 
+ :wq 
+ 
+# vim   /etc/systemd/system/nexus.service
+[Unit]
+Description=Nexus Service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+ExecStart=/opt/nexus/bin/nexus start
+ExecStop=/opt/nexus/bin/nexus stop
+User=nexus
+Group=nexus
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+:wq
+
+  #  systemctl daemon-reload 
+  
+  # systemctl enable nexus 
+  
+  # systemctl start nexus 
+  
+  # systemctl status nexus 
+  
+  # ss -ntlup | grep 8081 
+  
+  // You can find nexus admin password from this below location
+  
+  # cat  /opt/sonatype-work/nexus3/admin.password
+
+
+  // Go to browser and check nexus is loading or not 
+  
+   http://<ipaddress>:8081 
+   
+   
+   
