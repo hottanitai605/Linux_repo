@@ -1,5 +1,3 @@
-
-
 >>> Nexus Installation :
 ========================
 
@@ -71,6 +69,4 @@ WantedBy=multi-user.target
   // Go to browser and check nexus is loading or not 
   
    http://<ipaddress>:8081 
-   
-   
    
