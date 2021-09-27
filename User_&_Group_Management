@@ -1,0 +1,344 @@
+User:
+-----
+A user is an entity (having its own independent existence), in a Linux operating system, that can manipulate files(read,write,delete,give to permission,copy(backup),move etc) and perform several other operations. 
+
+adduser <username>
+useradd <username>
+newusers <username>
+
+/tmp -- directory
+
+tmp/ -- directory
+
+mv --
+
+Each user is assigned an ID that is unique for each user in the operating system.
+
+Why users? 
+Ans: User is required to manage the running process,to create file, folder, provide access to other users in a operating system .
+
+There are diferrent types of Users in linux OS? 
+
+1> Admin user:
+
+The user who has full privilage in a OS. 
+
+Usually 'root' is the default admin user in linux.
+
+UID of root user is 0 .
+
+2> Normal User: This type of user has limited privilage in a OS.
+
+UID range starts from 1000+ to 60000.
+
+3> System Users: 
+
+This type of users generally managing system releted processes.
+   
+There are two types of System Users such as i) Static system users and ii) Dynamic system users.
+
+Static system users: When you install the OS the process 
+Static system UID range start from 1 to 200, 
+
+and Dynamic user UID range starts from 201 to 999 . 
+
+4> Sudo Users:
+
+>> Whenever a Normal users get some additional previlege like a root user, Then that user known as Sudo user.
+>> Sudoers file is "/etc/sudoers"
+>> "visudo" is command line tool which is used to edit sudoers file because whenever we use visudo to edit suders file if any syntactical error it will not allow the save the file.
+
+
+5> Network Users:
+
+This type of users Details are stored in remote centralized database such as LDAP (Ligit Weight Directory Access Protocol) User in linux and 
+AD (Active Diretory) Users in Windows.
+
+Note: Every User identified by its UID(User Identifiers) .
+       Such as "root" user uid is "0"
+       Static System user uid range is 1 to 200 
+       Dynamic System users Uid range is 201 to 999
+       Normal Users uid range is 1000+ to 60000 
+
+   To check uid for a user  command is,
+   $id <User Name> 
+
+ Create a User:
+ --------------
+ How many way we can create a user in linux ? 
+
+ There are three way we can create a  user in linux such as using,
+
+  1> useradd 
+  2> adduser 
+  3> newuser 
+  
+ example : useradd <username>
+
+       ->    useradd -u (To Assign Uid)
+                   -g (To add in Primary Group)
+                   -G (To add in a secondary group)
+                   -s (To add in a shell environment for a user)
+                   -d (To add home directory for a user)
+                   -a (add) 
+                   -c (add some comment for a user)
+       
+ Example: adduser <username> 
+ 
+ User information stored in  "/etc/password" file and this file have 7 fields separeted by colons (:), such as .
+    
+  name:password:UID:GID:GECOS:directory:shell
+   
+   1> Username/loginname 
+   2> This is either the encrypted user password, an asterisk (*) .Password information which stored in "/etc/shadow" file .
+   3> Uid for this users .
+   4> Gid for this users Primary group.
+   5> Comment for this Users which known as GECOS.
+   6> Home Directory of a user .
+   7> login shell of a user .
+
+ Create a Password for a User:
+ ------------------------------
+  To Assign Password to a User command is:
+    
+   ex: passwd <username> 
+       
+  To check password in formation 
+     ex: passwd -S <username>
+   
+  Users password information are stored in "/etc/shadow" file.
+  Each Field of this file contains 9 fields, separated by colons (":"), in the following order:
+  
+ 1> Login name/User name: 
+  
+ 2> Encrypted password:
+
+ 3> Date of last password change
+    The date of the last password change, expressed as the number of days since Jan 1, 1970.
+
+ 4> Minimum Password age:
+   
+   The minimum password age is the number of days the user will have to wait before she will be allowed to change her password again. 
+   An empty field and value 0 mean that there are no minimum password age. 
+
+ 5> Maximum Password age: 
+
+   The maximum password age is the number of days after which the user will have to change her password.
+   After this number of days is elapsed, the password may still be valid. The user should be asked to change her password the next time she will log in.
+
+   An empty field means that there are no maximum password age, no password warning period, and no password inactivity period (see below). 
+
+ 6> Password warning period:
+    The number of days before a password is going to expire (see the maximum password age above) during which the user should be warned.
+    An empty field and value 0 mean that there are no password warning period.
+
+  7> Password inactivity period:
+     The number of days after a password has expired (see the maximum password age above) during which the password should still be accepted (and the user should           update her password during the next login).
+
+  8> Account expiration date: 
+     The date of expiration of the account, expressed as the number of days since Jan 1, 1970.
+     Note that an account expiration differs from a password expiration. In case of an acount expiration, the user shall not be allowed to login. In case of a password      expiration, the user is not allowed to login using her password.
+
+     An empty field means that the account will never expire.
+ 
+  9> Reserved field:
+     This field is reserved for future use.
+ 
+ Group:
+ ------
+ Create a Group:
+ --------------- 
+ What is Group ? 
+
+ Ans: Group is a collection of one are more number of users.
+
+ There are two types of Group in Linux OS such as, 
+ 1> Primary Group:
+     Every user must have one Primary group. 
+     When a user got created that time a group also created by default that group is known as Primary group, and Primary group can be changed for a user.
+
+ 2> Secendary/Suplimantary Group:
+    A User may have one or more then one secendary group members .
+
+#############################################################################################################
+Date:- 3/20/2021
+-----------------
+There are different types of shell in  linux such as 
+
+ >> /bin/sh : Burne Shell - Is the default shell in  Unix Environemnt
+ >> /bin/bash : Burne Again Shell - Is the default shell in Linux Environemnt Using which a user able to login .
+ >> /sbin/nologin : No Login or Non Interactive shell Using which User Can not login .
+ >> /bin/csh : C shell 
+ >> /bin/tcsh : Turbo C Shell 
+  >> The shell Environment Details information are stored in  "/etc/shells" .
+
+Usermod :- If a user already created then we can use usermod command .
+userdel :- This command is used to delete a user if this  User created exist in os .
+Passwd : This command is used to changed the User Password .
+
+passwd -S <Username>
+
+passwd -l <username>
+
+passwd -u <username>
+passwd -d <username>
+
+>> To check Password information in config file "/etc/shadow" .
+
+By default when ever we create a new user, the user password state is locked (!!). 
+After assigning password the second field is shows encrypted password .
+In Encrypted password from 1st $ to 2nd $ The algarithm number is available .
+
+there are three types of algatithm number available such as 1, 5, 6 .
+
+ The number 1 indicates it useges  MD5 hashing mechanism .
+ The number 5   indicates it useges SHA256 hashing mechanism .
+ The number 6  indicates it useges SHA512 hashing mechanism .
+
+Q> How to change password hashing mechanism .
+
+  Ans:-   authconfig --passalgo=md5/sha256/sha512 --update .
+
+#################################################
+ Date:-27/03/21 
+================
+>> User configuration file "/etc/login.defs"  
+
+>> User properties like, where user's home directory is to be created, what should be the user's shell, etc are taken from a file "/etc/default/useradd"
+
+ groupadd -> used to create a group .
+
+ ex: groupadd <Groupname>
+
+ >> To create system group :- 
+
+ ex: groupadd -r <Groupname>
+
+ groupmod -> To modify group information .
+
+ ex: groupmod -g <GID> <groupname>
+
+ groupdel -> To delete a group .
+
+ ex: groupdel <Groupname> 
+
+ >> To assign password to a group "gpasswd" command is used .
+
+ ex: gpasswd <Groupname>
+
+ >> How to remove passwd from a group .
+
+ ex: gpasswd -r <GroupName> 
+
+Q> How to login in a group 
+ 
+ ex: newgrp <GroupName>
+
+ >> To add a user in a group as a seplementary group member .
+
+ ex: gpasswd -a <userName> <GroupName>
+
+ >> To add at a time multiple user in a group .
+
+ ex: gpasswd -M user1,user2,user3,user4 <GroupName> 
+
+ >> To add a user in a group as a group Admin .
+
+ ex: gpasswd -A user1 <GroupName> 
+
+ >> To delete a user from a group 
+
+ ex: gpasswd -d <UserName> <GroupName> 
+
+ Group information are stored in "/etc/group" and it contains four fileds seperated by (:) such as 
+ 
+ ex:  <GroupName>:<Encrypted Password>:<GID>:<Group Members>
+ 
+    
+ Group password information are stored in "/etc/gshadow" and it contains four fields separated by (:) such as .
+
+ ex: <Group Name>:<Encrypted Password>:<GroupAdmin>:<GroupMembers>
+
+
+>> Password aging Policy :-
+=========================
+>> To manage password aging policy using "chage" command .
+
+>> To check password expire information  about a user .
+
+ ex: chage -l <username>
+
+ 
+
+Q>> How to create a duplicate user using similar UID?
+
+ex: useradd -u 0 -o <new UserName>
+
+Url link to follow : 
+https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-rename-linux-users-and-their-home-directory/
+
+
+Q> how to rename a user in linux ? 
+
+ Ans: usermod -l <New Username> <Old Username>
+
+Q> How to change home directory for a user ? 
+
+Note: We set the new home directory path using the -d or --home flag with the path to the new directory. We must also use the -m flag to copy the contents of the old home directory into the new one. 
+
+Ans: usermod -d /home/username -m <UserName> 
+
+Q>> How to create a system user ?
+
+ex: useradd -r <UserName>
+
+Q> How to rename a group in linux ?
+
+Ans: groupmod -n <New GroupName> <Old GroupName>
+
+######################################################
+
+>>Q> what is "/etc/skel" directory in Linux ?
+
+ Ans>> 1> skel is derived from the skeleton because it contains basic structure of home directory.
+   
+       2> The /etc/skel directory contains files and directories that are automatically copied 
+          over to a new user's when it is created from useradd command.
+   
+       3> This will ensure that all the users gets same intial settings and environment.
+ 
+Q> How to create a user using "newusers" command in linux ?
+
+ Ans>> step1> Create a file and add user details like in "/etc/passwd" such as .
+
+      >> # vim /newusers.txt 
+          user1:x:1222:1222::/home/user1:/bin/bash
+
+        :wq! (To save)
+       
+        # newusers /newusers.txt 
+        # id user1 
+     step2> Go to skell directory and copy the containt to newly created users home directory .
+
+        # cd /etc/skell 
+        # cp bash* /home/user1/
+        # su - user1  
+
+ >> shell is used where a user can interact with the shell, i.e. your typical bash prompt. ... The difference is simple, the /etc/profile is executed only for interactive shells and the /etc/bashrc is executed for both interactive and non-interactive shells.
+
+        
+ >> "There are four files of interest:
+/etc/profile :  file is used to set system wide environmental variables on users shells
+
+
+/etc/bashrc : This file is meant for setting command aliases and functions used by bash shell users. 
+~/.bash_profile
+~/.bashrc
+
+ >> The first two files are system-wide configuration files for bash. Anything that you put in them will affect all users on the system. The last two are your user configuration files for bash. Any modifications to these files will only affect your user.
+
+ >> The files /etc/profile and ~/.bash_profile are used when bash is started as a login shell. This usually happens when you log into your X Windows session or log in remotely, using e.g. SSH. Otherwise, the /etc/bashrc and ~/.bashrc files are used. In both cases, the system-wide file is read first, and the user-specific file second.
+
+ >> Setting the PATH variable is usually done in the profile files, since you only want to set those one, not every time you open a new X terminal." 
+
+         
