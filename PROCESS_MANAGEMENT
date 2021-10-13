@@ -1,0 +1,29 @@
+>> PROCESS_MANAGEMENT: 
+  ===================
+
+Q> What is a Process?
+
+ Ans: An running  instance of a program is called a Process.
+      In simple terms, any command that you give to your Linux machine starts a new process.
+	  
+	  
+Types of Processes:
+
+>> Foreground Processes: 
+    > By default, every process that you start runs in the foreground. 
+	  It gets its input from the keyboard and sends its output to the screen.
+
+    > You can see this happen with the ls command. 
+	  If you wish to list all the files in your current directory, 
+	  you can use the following command −
+
+Background Processes: 
+
+  >> A background process runs without being connected to your keyboard.
+     If the background process requires any keyboard input, it waits.
+
+
+   > The advantage of running a process in the background is that you can run other commands;
+     you do not have to wait until it completes to start another!
+
+   > The simplest way to start a background process is to add an ampersand (&) at the end of the command.
