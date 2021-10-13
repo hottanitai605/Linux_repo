@@ -1,0 +1,216 @@
+File Permission:
+=================
+
+What is umask value in linux ?
+
+ Ans: Umask determintes the default permission for files and folders in linux/unix .
+      default umask value under root user is 022 .(----w--w-).
+      default umask value under normal user is 002 (-------w-).
+
+ What is the full permission for a file in linux ?
+
+ Ans: The permission if a file in linux is 666 (rw-rw-rw-) .
+      
+What is the full permission for a folder in linux .
+
+Ans: The full permission for a folder in linux/unix is 777(rwxrwxrwx).
+
+ What is the default permission for a file and folder in linux/unix ?
+
+Ans: Default permission for a file under root user is 
+     666 - 022 = 644
+    Default permission for a folder under root user is 
+     777 - 022 = 755 
+    default permission for a file under normal user is 
+     666  - 002 = 664 
+    default permission for a folder under normal user is 
+     777  - 002 = 775 .
+read(r)=4
+write(w)=2
+execute(x)=1
+----------(rwxrwxrwx)(777) 
+
+----------(rw-rw-rw-)666
+----------(--x--x--x)111
+----------(-wx-wx-wx)333
+----------(r-xr-xr-x)555
+----------(---------)0  
+ 
+. File permission that provides a secure method for storing files. 
+
+Every file has the following attributes −
+
+Owner permissions − The owner's permissions determine what actions the owner of the file can perform on the file.
+
+Group permissions − The group's permissions determine what actions a user, who is a member of the group that a file belongs to, can perform on the file.
+
+Other (world) permissions − The permissions for others indicate what action all other users can perform on the file.
+
+File Access Modes
+==================
+The permissions of a file are the first line of defense in the security of a Unix system. The basic building blocks of Unix permissions are the read, write, and execute permissions, which have been described below −
+
+Read(r)-4
+Grants the capability to read, i.e., view the contents of the file.
+
+Write(w)-2
+Grants the capability to modify, or remove the content of the file.
+
+Execute(x)1
+User with execute permissions can run a file as a program.
+
+Directory Access Modes
+======================
+Directory access modes are listed and organized in the same manner as any other file. There are a few differences that need to be mentioned −
+
+Read(r)4
+Access to a directory means that the user can read the contents. The user can look at the filenames inside the directory.
+
+Write(w)2
+Access means that the user can add or delete files from the directory.
+
+Execute(x)1
+Executing a directory doesn't really make sense, so think of this as a traverse permission.
+
+Note:- A user must have execute access to the bin directory in order to execute the ls or the cd command.
+       Script or progarm file required execute permission.
+
+Changing Permissions
+To change the file or the directory permissions, we use the chmod (change mode) command. 
+There are two ways to use chmod — the symbolic mode and the absolute/numerical mode.
+
+Examples: chmod 744 <file/folderName>
+          chmod 0 <filename>
+          chmod 761 <filename>
+          
+          Symbolically:
+            
+           syntax:
+               chmod  whowhatwhich <file/folder>
+                
+             who stands for u,g,o .
+             what stands for +,-,=
+             which stands for r,w,x
+-------------------------------------
+          # chmod a=rwx <filename> // Here a(all) stands for u(user/owner),g(group owner) and o(others) .
+          
+                (or)
+          # chmod  ugo=rwx <filename>
+
+          # chmod o-rwx <filename>
+          
+          # chmod u-x,g-rx,o-rw <filename> (rw--w---x)
+          # chmod g=rx <filename> (rw-r-x--x)
+
+          # chmod u-r,g=wx,o+r <filename>
+          # chmod u=w,g=wx,o=rx <filename> (-w-,-wx,r-x)   
+
+Numerically : 
+
+           # chmod 641 <file/dir>
+           # chmod 777 <file/dir>
+           # chmod 0 <file/dir>
+             
+
+Changing Owners and Groups:
+===========================
+
+>>  While creating an account on Linux/Unix, it assigns a owner ID and a group ID to each user.
+
+Two commands are available to change the owner and the group of files −
+
+chown − The chown command stands for "change owner" and is used to change the owner and group  of a file/dir.
+
+ Syntax:
+      
+     >> To change owner of a file
+     # chown <username> <file/dir>
+     >> To change owner and group for a file 
+     # chwon <username>:<groupname> <file/dir>
+
+     >> To change group  for a file/dir 
+     # chown :<groupname> file/dir 
+
+
+
+   
+
+chgrp − The chgrp command stands for "change group" and is used to change the group of a file.
+
+ Syntax: 
+ 
+   # chgrp <groupname> <file/dir>
+
+ #################################################################
+
+   Special Permission: 
+======================
+
+ There are three types of special permission .
+
+ 1> suid(set-user-id) - u+s (4)
+ 2> sgid(set-group-id) - g+s (2)
+ 3> stickybit - o+t (1) 
+
+ >> All above three permission can be assign using chmod command .
+
+ 1> suid(set-user-id) - 
+
+What is Set User ID (setuid)?
+SUID is a special permission assigned to a executable file/program . 
+These permissions allow the file being executed with the privileges of the owner by all other users. 
+
+>> For example, if a file was owned by the root user and has the setuid ,
+ no matter who executed the file it would always run with root user privileges.
+
+  >> How to assign suid permission .
+  # chmod u+s <command_path>
+        (or)
+  # chmod +4000 <command_path>
+
+>> How to remove suid permission .
+  # chmod u-s <command_path> 
+        (or)
+  # chmod -4000 <command_path>
+
+What is Set Group ID (setgid) for files? 
+
+Ans: SGID is a special file permission that applies to folder and
+    allow other users to inherit the effective  group owner(gid) according to parent directory when they create any sub folder or file. 
+
+    How to assign sgid permission to a folder ?
+    
+     # chmod g+s <foldername>
+
+          (or)
+     # chmod +2000 <foldername>
+
+    
+     How to remove sgid permission .
+
+     # chmod g-s <foldername>
+
+           (or)
+     # chmod -2000 <foldername> 
+
+
+ What is sticky bit on a directory
+ 
+ Ans: When the sticky bit is set on a directory, Under the sticky bit applied directory 
+      who creates any file or folder, only owner and root user can delete the files or folders .
+      Other users can not delete these files and folders .
+    
+  How to assign stikybit permission ?
+
+  # chmod o+t <folder>
+
+       (or)
+  # chmod +1000 <folder>
+
+ How to remove stickybit permission ?
+
+ # chmod o-t <foldername>
+
+     (or)
+ # chmod -1000 <foldername> 
+
