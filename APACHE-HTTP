@@ -1,0 +1,279 @@
+Apache http Web Server:
+=======================
+-->
+
+Apache server is a free and an open source web server.
+Apache is the most widely used Web Server application in Unix-like operating systems but can be used on 
+almost all platforms such as linux, Windows, OS X, OS/2, etc .
+
+It is the most widely used Web Server application in the world with more than 60-70% share in the commercial web server market.
+
+Apache HTTP Server
+===================
+Apache HTTP server is one of the most popular web servers.
+It was developed by the Apache Software Foundation open source community.
+Most of the web server machines run the Apache web server.
+The word 'Apache' was taken from the Native American Indian tribe of Apache,
+famous for its superior skills in warfare strategy and their inexhaustible endurance.
+
+Web server
+==========
+
+A web server is a computer where content is stored on the server.
+Web server's basic job is to accept user requests and send responses to those requests.
+
+
+What is Virtual Host?
+
+An Apache web server can host multiple websites on the SAME server. You do not need separate server machine 
+and apache software for each website. This can achieved using the concept of Virtual Host or VHost.
+
+Any domain that you want to host on your web server will have a separate entry in apache configuration file
+
+There are two Types of web Hosting: 
+
+1- IP address based hosting- For IP based hosting, we need to have a different IP for every website that we are hosting.
+   These IPs are then attached to a single or multiple NICs.
+
+2- Name based Virtual hosting- Name based hosting is used to host multiple virtual websites using a single IP address.
+
+
+Profile for Apache http(Hyper Text Transfer Protol ) :
+------------------------------------------------------
+Package Name: httpd 
+Original Config file : /etc/httpd/conf/httpd.conf 
+Suplementary config file : /etc/httpd/conf.d/*.conf 
+port numbers: 80(http),443(https)
+Document Root Directory: /var/www/html   // From where your web page content file available    	  
+Log File: /var/log/httpd/(access.log/error.log) 
+User for Apache : apache 
+Default Directory Index file: index.html   // where web content is available
+Daemon/service : httpd.service 
+selinux file context for apache/http : httpd_sys_content_t
+selinux booleans for apache/http: http_port_t 
+ 
+Parameters in http configuartion file :
+======================================
+
+VirtualHost:
+
+<VirtualHost> and </VirtualHost> tags create a container outlining the characteristics of a virtual host.
+ The VirtualHost container accepts most configuration directives.
+
+A commented VirtualHost container is provided in httpd.conf, which illustrates the minimum set of configuration
+directives necessary for each virtual host. 
+
+ServerAdmin: 
+
+Sets the ServerAdmin directive to the email address of the Web server administrator. 
+This email address shows up in error messages on server-generated Web pages, 
+so users can report a problem by sending email to the server administrator.
+
+By default, ServerAdmin is set to root@localhost.
+
+ServerName:
+
+ServerName specifies a hostname and port number (matching the Listen directive) for the server. 
+The ServerName does not need to match the machine's actual hostname. For example, 
+the Web server may be www.example.com, but the server's hostname is actually foo.example.com.
+The value specified in ServerName must be a valid Domain Name Service (DNS) name that can be resolved by the system .
+
+  # yum install epel-release -y 
+ # yum install httpd elinks -y 
+ 
+ # systemctl enable httpd ; systemctl start httpd ; systemctl status httpd 
+ 
+ # echo  "10.0.2.15 www.example.com" >> /etc/hosts 
+ 
+ # echo "10.0.2.15  www.gmail.com" >> /etc/hosts 
+  
+  
+ # cat /etc/hosts 
+ 
+ # echo  "Hello India" >> /var/www/html/index.html 
+ 
+ # cat /var/www/html/index.html 
+ 
+ # vim /etc/httpd/conf.d/web1.conf 
+ 
+  <VirtualHost 10.0.2.15:80>
+  ServerAdmin root@foo.example.com 
+  ServerName  www.example.com 
+  DocumentRoot /var/www/html
+	
+  </VirtualHost> 
+   <Directory "/var/www/html">
+   AllowOverride None   
+   Require all granted 
+  </Directory> 
+
+:wq
+
+ # httpd -t 
+
+ # systemctl restart httpd 
+
+ #  curl  http://www.example.com 
+ 
+  # elinks --dump www.example.com 
+  
+   # elinks www.example.com // To come out  press q 
+   
+ For Name Based web Hosting 
+#################################
+ 
+  # mkdir  -p /mydata/data
+  
+  # echo "This is Name based Web Hosting" >> /mydata/data/web.html 
+  
+  # chcon  -Rvt http_sys_content_t /mydata
+  
+  # ls -lRZ /mydata
+  
+    
+  # vim /etc/httpd/conf.d/web1.conf 
+
+
+<VirtualHost 10.0.2.15:80>
+  ServerAdmin root@foo.example.com 
+  ServerName  www.gmail.com 
+  DocumentRoot /mydata/data
+  DirectoryIndex web.html
+</VirtualHost> 
+   
+<Directory "/mydata/data/">
+   AllowOverride None 
+   Require all granted 
+  </Directory> 
+:wq
+
+ # httpd -t   
+  
+ # systemctl restart httpd 
+ 
+ # curl www.example.com 
+ 
+ # curl www.gmail.com 
+
+ # elinks --dump www.example.com
+
+ # elinks www.example.com 
+
+ Hosting web Site Securely https(http+ssl): 
+===========================================
+
+ package Required : httpd, mod_ssl 
+
+ config file : /etc/httpd/conf.d/ssl.conf 
+
+
+ To generate ssl certificate and key file "openssl" command is used: 
+---------------------------------------------------------------------
+
+ # openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt 
+
+###############################
+  >> After you enter the request, you will be taken to a prompt where you can enter information about your website. 
+     Before we go over that, let’s take a look at what is happening in the command we are issuing:
+
+>> openssl: This is the basic command line tool for creating and managing OpenSSL certificates, keys, and other files.
+
+>> req -x509: This specifies that we want to use X.509 certificate signing request (CSR) management. 
+              The “X.509” is a public key infrastructure standard that SSL and TLS adhere to for key and certificate management.
+
+>> -nodes: This tells OpenSSL to skip the option to secure our certificate with a passphrase. 
+           We need Apache to be able to read the file, without user intervention, when the server starts up. 
+           A passphrase would prevent this from happening, since we would have to enter it after every restart.
+
+>> -days 365: This option sets the length of time that the certificate will be considered valid. We set it for one year here.
+
+>> -newkey rsa:2048: This specifies that we want to generate a new certificate and a new key at the same time. 
+                     We did not create the key that is required to sign the certificate in a previous step, 
+                     so we need to create it along with the certificate. 
+                     The rsa:2048 portion tells it to make an RSA key that is 2048 bits long.
+
+>> -keyout: This line tells OpenSSL where to place the generated private key file that we are creating.
+
+>> -out: This tells OpenSSL where to place the certificate that we are creating.
+
+  > COUNTRY NAME: IN 
+  > State or Provience Name : (enter)
+  > Locality Name: 
+  > Organisation Name: 
+  > Oraganisation unity Name: 
+  > Server Host name: 
+  > Email Address: 
+  
+
+# mv server.key /etc/pki/tls/private/
+ 
+# ls -l /etc/pki/tls/private/
+# mv server.crt /etc/pki/tls/certs/
+# ls -l /etc/pki/tls/certs/
+
+
+# vi  /etc/httpd/conf.d/myweb.conf 
+    <VirtualHost *:443>
+     ServerAdmin root@localhost
+     ServerName  web.example.com  
+     DocumentRoot /var/www/html/
+     SSLEngine on 
+     SSLCertificateFile /etc/pki/tls/certs/server.crt
+     SSLCertificateKeyFfile /etc/pki/tls/private/server.key 
+    </VirtualHost> 
+
+    <Directory "/var/www/html"> 
+     AllowOverride None 
+     Require all granted
+    </Directory> 
+
+: wq 
+
+ # echo  "hello india" >> /var/www/html/index.html 
+
+ # echo "192.X.X.X web.example.com" >> /etc/hosts
+
+ # systemctl restart httpd
+
+ # systemctl enable httpd
+
+ # httpd -t 
+
+PORT BASED WEB Hosting
+=======================
+ # mkdir -pv /var/www/data/
+  
+ # echo "This is port based web hosting" >> /var/www/data/index.html 
+ # chcon -Rt httpd_sys_content_t /var/www/  // Adding selinux file context 
+ # ls -ldZ /var/www/data/ 
+  # yum install policycoreutils* -y // to get semanage command
+ 
+ # semanage port -at http_port_t  -p tcp 8888 // Adding selinux boolean for Apache http 
+ 
+ # semanage port -l | grep http_port_t 
+ 
+ 
+ # vi /etc/httpd/conf.d/port.conf 
+   Listen 8888 
+   <VirtualHost *:8888>
+    ServerName web.example.com 
+	ServerAdmin root@localhost
+	DocumentRoot /var/www/data
+   </VirtualHost>
+   
+  <Directory "/var/www/data/">
+  Require all granted 
+  </Directory>
+  
+  :wq
+  
+  # httpd -t 
+  
+  # echo "hostip web.example.com" >> /etc/hosts 
+  
+  # cat /etc/hosts 
+  
+  # systemctl enable httpd ; systemctl start httpd ; systemctl status httpd 
+  
+  # 
+  
