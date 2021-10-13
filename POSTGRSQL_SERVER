@@ -1,0 +1,201 @@
+
+  Postgresql:
+===============
+
+>>> PostgreSQL, also known as Postgres, is a free and open-source relational database management system emphasizing extensibility and SQL compliance.
+   It was originally named POSTGRES, referring to its origins as a successor to the Ingres database developed at the University of California .
+
+
+ 
+ # yum install epel-release -y 
+
+
+ # yum install vim net-tools bind-utils wget -y
+
+ //  Install the repository RPM for postgres
+
+ # yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+ // install postgressql package 
+  
+ #  yum install -y postgresql10-server
+
+ // To initialize the database  
+ 
+ #  /usr/pgsql-10/bin/postgresql-10-setup initdb
+ 
+ 
+# systemctl enable postgresql-10
+ 
+ #  systemctl start postgresql-10
+
+ # systemctl status postgresql-10
+ 
+ # ps -ef | grep postmaster | grep -v grep  // get here process id 
+
+ # ss -ntlup | grep <process id>  
+    (or directly follow below method)
+
+ # ss -ntlup | grep 5432 // this is the port number for postgresql 
+ 
+ # su - postgres
+
+   > psql 
+
+
+   # CREATE DATABASE yourdbname; // To create database 
+
+   #\list
+ 
+   # CREATE USER youruser WITH ENCRYPTED PASSWORD 'yourpass';    // To create user with password 
+
+   #\du // To list users      
+
+   # GRANT ALL PRIVILEGES ON DATABASE dbname TO username;  // To grant all privilages to user in db 
+
+   # \l  // To verify 
+
+
+  #  // to change the owner of the database 
+
+  #\l 
+
+
+  > \c <dbname> // To connect or use database  
+
+  >\dt   // to list tables/schema inside database  
+
+ > \! cls // To clear the screen in windows if you access the database using cmd prompt 
+
+ > \! clear  // To clear screen in linux 
+
+ 
+
+ > create table students (stu_id INT PRIMARY KEY, stu_name VARCHAR(240) NOT NULL, std_program VARCHAR(240) NOT NULL, std_stream VARCHAR(240) NOT NULL);  
+
+ > \d students ; // To describe table 
+
+ > \d+ students ; // more detail desciption . 
+
+ 
+ > insert into students (stu_id , std_name , std_program, std_stream) values (1 , 'kalia', 'Btech', 'CSE') ; 
+
+ > insert into students (2, 'balia', 'MCA', 'CSE');
+
+ > insert into students (3, 'jaga', 'BCA', 'CSE'); 
+
+ > select * from students ;
+
+ > select std_stream std_name from students where stu_no=1 ;
+
+ > update students set std_stream="ENG" where std_id=2 ;
+
+ > select * from students ;
+
+ > delete from students where std_id=3 ;
+
+ > select * from students ;
+
+  // shows all tables in the current schema:
+
+ > \dt 
+
+
+ //  changing the owner of a table with following query
+
+ > ALTER TABLE public.<tablename> OWNER to ownername;
+ 
+ > \? list all the commands
+ 
+ > \l list databases
+ 
+ > \conninfo display information about current connection
+
+  > \c [DBNAME] connect to new database, e.g., \c template1
+
+  > \dt list tables of the public schema
+
+  > \dt <schema-name>.* list tables of certain schema, e.g., \dt public.*
+
+  > \dt *.* list tables of all schemas
+
+ Then you can run SQL statements, e.g., SELECT * FROM my_table;(Note: a statement must be terminated with semicolon ;)
+
+  > \q quit psql
+
+
+   // Revoke insert privilege for the public on table films:
+
+   > REVOKE INSERT ON films FROM PUBLIC;
+
+   // Revoke all privileges from user manuel on view kinds:
+
+
+   > REVOKE ALL PRIVILEGES ON kinds FROM manuel;
+
+  // By default all public schemas will be available for regular (non-superuser) users. 
+     To prevent this, login as a superuser and issue a command:
+
+   > REVOKE ALL ON DATABASE somedatabase FROM PUBLIC;
+
+  // This will revoke all permissions from all users for a given database.
+
+ >>> By default, PostgreSQL allows to listen for the localhost connection. It does not allow a remote TCP/IP connection. 
+     To allow a remoteTCP/IP connection.
+
+  
+ >>>  Change the listening address in the postgresql.conf file.
+   
+ // To find the postgresql configuration file (logout)
+
+  # find  / -iname postgresql.conf  (find linux )
+
+  /var/lib/pgsql/10/data/postgresql.conf
+
+ 
+  # vim /var/lib/pgsql/10/data/postgresql.conf
+
+
+   listen_addresses = '*'     // replace localhost to  "*"
+ 
+  :wq 
+
+
+>>> By default, PostgreSQL accepts connections only from the localhost. It refuses remote connections. 
+    This is controlled by applying an access control rule that allows a user to log in from an IP address after 
+    providing a valid password (the md5 keyword). To accept a remote connection . 
+
+>>> Add a client authentication entry to the pg_hba.conf file.
+
+   
+   # find  / -iname pg_hba.conf
+    /var/lib/pgsql/10/data/pg_hba.conf
+
+   # vim  /var/lib/pgsql/10/data/pg_hba.conf 
+
+   81 # IPv4 local connections:
+   82 #host    all             all             127.0.0.1/32            ident
+   83 host    all             all             0.0.0.0/0            md5
+
+
+  :wq
+
+  # systemctl restart postgresql-10
+
+  # systemctl status  postgresql-10  
+
+// To access database localy 
+
+  # psql -U <username> -h 127.0.0.1 -d <database> -W
+     
+// To connect remotely to postgresql server  
+
+
+ #  yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+
+ # yum install -y postgresql10
+
+ # psql -h <Server_IP> -U <username> -d <dbname> -W
+ 
+
