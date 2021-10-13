@@ -1,0 +1,145 @@
+url link to check: https://linuxize.com/post/how-to-setup-a-firewall-with-firewalld-on-centos-7/
+
+Firewall :
+
+>> A Linux firewall is a device that inspects Network traffic ( Inbound /Outbound connections ) and makes a decision to pass or filter out the traffic .
+
+>> The predefined zones are stored in the /usr/lib/firewalld/zones/ directory and can be instantly applied to any available` network interface.
+ These files are copied to the /etc/firewalld/zones/ directory only after they are modified. 
+ The following table describes the default settings of the predefined zones:
+
+>> ZONES: 
+
+ >> Zones enable level of trust in network connections or interfaces .
+ 
+ Types of zones in firewall : 
+ ============================
+
+ 1>> block :
+ ----------
+  >> Any incoming network connections are rejected with an icmp-host-prohibited message for IPv4 and icmp6-adm-prohibited for IPv6. 
+  Only network connections initiated from within the system are possible.
+
+ 2>> dmz: 
+ 
+  >> For computers in your demilitarized zone that are publicly-accessible with limited access to your internal network.
+     Only selected incoming connections are accepted.
+
+ 3>> drop: 
+
+ >> Any incoming network packets are dropped without any notification. Only outgoing network connections are possible.
+
+ 4>> external: 
+
+  >> For use on external networks with masquerading enabled, especially for routers. You do not trust the other computers on the network 
+     to not harm your computer. Only selected incoming connections are accepted.
+
+ 5 >> home: 
+
+>> For use at home when you mostly trust the other computers on the network. Only selected incoming connections are accepted.
+
+ 6>> internal: 
+
+>> For use on internal networks when you mostly trust the other computers on the network. Only selected incoming connections are accepted.
+
+ 7 >> public: 
+
+>> For use in public areas where you do not trust other computers on the network. Only selected incoming connections are accepted.
+
+ 8 >> trusted: 
+
+>> All network connections are accepted.
+
+ 9 >> work:
+
+  >> For use at work where you mostly trust the other computers on the network. Only selected incoming connections are accepted.
+
+
+Profile for firewall in linux :
+===============================
+
+ Package Name : firewalld 
+
+ service/daemon : firewalld 
+
+ Config file : /etc/firewalld/firewalld.conf 
+
+
+ # rpm -qa | grep firewalld  // to check package 
+
+ # rpm -qc firewalld // To check firewall config file 
+
+>> To manage firewall in linux "firewall-cmd" command is used 
+
+ # firewall-cmd --help 
+ 
+ # firewall-cmd --list-all-zones  
+
+ # firewall-cmd --state // To check firewall is runnning or not 
+
+>> To manage firewall in GUI mode firewall-config command is used .
+
+ # firewall-config 
+
+>> To list all the relevant information for the default zone:
+
+ # firewall-cmd --list-all 
+
+ >> To list information for specific zones .
+
+ # firewall-cmd --list-all --zone=work 
+
+ >> To see which zones are available on your system:
+
+  # firewall-cmd --get-zones
+
+ >> To list all the services 
+
+ # firewall-cmd --list-services 
+
+ >> To list all ports  
+
+ # firewall-cmd --list-ports 
+
+ 
+
+ >> Add the service to the allowed services:
+  
+  # firewall-cmd --add-service=<service-name> // By default it will add in default zone called Public
+
+  # firewall-cmd --list-all
+ 
+ >> Make the new settings persistent:
+ 
+  # firewall-cmd --runtime-to-permanent 
+
+ >> To allow a service in firewall permanently 
+
+  # firewall-cmd --permanent --add-service=http 
+
+  # firewall-cmd --reload // To update the above changes permanently 
+
+ >> To add a port in firewall permanent 
+
+ # firewall-cmd --permanent --add-port=80/tcp 
+
+ >> To update the changes in firewall 
+
+ # firewall-cmd --reload 
+
+>> How to remove service or port from firewall 
+
+ # firewall-cmd --permanent --remove-port=80/tcp 
+
+ # firewall-cmd --permanent --remove-service=http/tcp 
+
+ # firewall-cmd --reload 
+
+>> Display the current default zone:
+  
+   # firewall-cmd --get-default-zone
+
+>> Set the new default zone:
+  
+  # firewall-cmd --set-default-zone zone-name
+   
