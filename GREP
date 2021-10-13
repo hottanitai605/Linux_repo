@@ -1,0 +1,57 @@
+GREP AND EGREP : 
+
+GREP : regular expressions ($ ^ * | "" '') 
+
+
+Grep command is used to filter porticular partern or string  from a file by using some regular expressions .
+
+
+Syntax: grep [options] pattern [files]
+
+ 1> Create a file
+
+  # cat > file.txt
+    cat
+    concatination
+    dog
+    doggy
+    chillidog
+    sultan
+    catdog
+    tom
+    Tommy
+    dogCat
+ 
+ # grep "cat" file.txt 
+ 
+ # grep -i "cat" file.txt
+ 
+ # grep -l cat * 
+
+ # grep -e cat -e dog file.txt 
+
+ # grep -E "cat|dog|tom" file.txt 
+
+ # egrep   "cat|dog|tom" file.txt 
+
+ # grep -w "cat" file.txt 
+
+ # grep -v "dog" file.txt 
+
+ # grep -i "^cat" file.txt 
+ 
+ # grep "cat$"  file.txt
+
+ # grep -c "cat" file.txt 
+
+ # grep -n "cat" file.txt
+
+ # grep -A1 "sultan" file.txt
+
+ # grep -B1 "sultan" file.txt
+
+ # grep -C1 "sultan" file.txt
+
+Try to make note for each command meaning. you can refer this link 
+ Url link : https://www.geeksforgeeks.org/grep-command-in-unixlinux/ 
+
