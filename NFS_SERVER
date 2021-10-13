@@ -1,0 +1,188 @@
+NFS Server/Client configuration : 
+
+
+NFS(Network File System): 
+========================
+
+>>> NFS (Network File System) is basically developed for sharing of files and folders between Linux/Unix systems
+    by Sun Microsystems in 1980. 
+	
+>>> It allows you to mount your local file systems over a network and remote hosts to interact 
+    with them as they are mounted locally on the same system. With the help of NFS,
+    we can set up file sharing between Unix to Linux system and Linux to Unix system.
+
+>>> NFS server exports a directory and NFS client mounts this directory. 
+    RHEL 7 supports two version of NFS – NFSv3 and NFSv4.
+	
+>>> Benefits of NFS :: 
+----------------------
+ > NFS allows local access to remote files.
+ > It uses standard client/server architecture for file sharing between os.
+ > With NFS it is not necessary that both machines run on the same OS.
+ > With the help of NFS we can configure centralized storage solutions.
+ > Users get their data irrespective of physical location.
+ > No manual refresh needed for new files.
+ > Newer version of NFS also supports acl, pseudo root mounts.
+ > Can be secured with Firewalls and Kerberos.	
+	
+	
+ Profile for nfs : 
+ =================
+ 
+  Package Name : nfs-utils and rpcbind 
+  
+  Daemon/Service : nfs-server , rpcbind 
+  
+  Service needs to Be add in firewall: nfs,mountd,rpc-bind 
+   
+  Port Number: 2049    
+  
+  Configuration file: 
+  
+  /etc/exports : Its a main configuration file of NFS, all exported files and directories are defined 
+                 in this file at the NFS Server end.
+  /etc/fstab : To mount a NFS directory on your system across the reboots, we need to make an entry in /etc/fstab.
+  
+  /etc/sysconfig/nfs : Configuration file of NFS to control on which port rpc and other services are listening.
+
+   
+ >> Client nfs options include (defaults are listed first) :
+  
+  ->  ro / rw :
+     a) ro : allow clients read only access to the share.
+     b) rw : allow clients read write access to the share.
+  
+  -> sync / async :
+   a) sync : NFS server replies to request only after changes made by previous request are written to disk.
+   b) async : specifies that the server does not have to wait.
+
+  -> wdelay / no_wdelay
+    a) wdelay : NFS server delays committing write requests when it suspects another write request is imminent.
+    b) no_wdelay : use this option to disable to the delay. 
+	   no_wdelay option can only be enabled if default sync option is enabled.
+
+  -> no_all_squash / all_squash :
+    a) no_all_squash : does not change the mapping of remote users.
+    b) all_squash : to squash all remote users including root.
+
+  -> root_squash / no_root_squash :
+    a) root_squash : prevent root users connected remotely from having root access. 
+	   Effectively squashing remote root privileges.
+    b) no_root_squash : disable root squashing.
+	
+	Server side : 
+	
+   
+  # yum  install epel-release -y    
+  # yum install nfs-utils rpcbind -y // To install nfs package 
+ 
+  # systemctl start nfs-server rpcbind ; systemctl enable nfs-server rpcbind  // start and enable nfs service 
+  
+  # systemctl status  nfs-server rpcbind 
+  
+  # firewall-cmd --permanent --add-service=nfs 
+
+  # firewall-cmd --permanent --add-service=rpc-bind 
+
+  # firewall-cmd --permanent --add-service=mountd
+
+  # firewall-cmd  --reload 
+
+  
+  # ss -ntlup | grep 2049 // to check port is listening 
+  
+  # grep  nfsnobody /etc/passwd // To check default anonymous users for nfs 
+
+  # mkdir /nfsshare 
+  
+  # chown nfsnobody:nfsnobody  /nfsshare 
+  
+  # chmod 777 /nfsshare 
+  
+  # vim /etc/exports // To exports nfs share remotely 
+
+    /nfsshare  *(rw,sync) 
+
+  :wq 
+
+  # exportfs -rv  // To update exports file 
+
+  # systemctl restart  nfs-server rpcbind 
+  
+  # showmount -e // to check export list 
+  
+  # showmount -e localhost 
+  
+  # showmount -e <ipaddress> 
+  
+  
+NFS Client: 
+===========
+
+  # yum install epel-release -y 
+  
+  # yum  install nfs-utils -y 
+
+  # showmount -e <nfs server ip> // To list nfs exports in client side  
+
+  #  mount -t nfs -o rw <server_Ip>:/nfsshare /mnt(any directory as mount point) // Temporary mount nfs share in client side 
+  
+  # df -Th  
+  
+  # cd /mnt/
+  
+  # echo "testing nfs share" >> test1 
+  
+  # ls -l 
+  
+ // To mount permanently nfs share under fstab 
+  
+   # vi /etc/fstab 
+   
+    nfs_server_ip:/nfshare  /mnt nfs  defaults 0 0 
+
+   :wq 
+
+  # mount -a 
+
+  # df -Th  
+
+
+ Automount nfs share remotely means client side 
+================================================
+
+  Package Name : autofs 
+  config file: /etc/auto.master  
+  mapping file : etc/auto.misc 
+  Daemon/service : autofs 
+  
+  # yum install autofs -y 
+  
+  # systemctl enable autofs ; systemctl start autofs 
+  
+  # systemctl status autofs 
+  
+  # vi /etc/auto.master 
+  
+    // Go to last line and add this below 
+	
+	/-    /etc/auto.misc 
+	
+	:wq
+	
+  # vi /etc/auto.misc 
+  
+   /newshare  --fstype=nfs,rw,sync  <nfsserver_ip>:/nfsshare  
+   
+   
+   :wq
+   
+   # systemctl restart autofs 
+   
+   
+   >> To verify nfs mount 
+   
+   # cd /newshare 
+   
+   #  ls  -l 
+   
