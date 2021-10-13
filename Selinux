@@ -1,0 +1,138 @@
+SELINUX(Security Enhanced Linux):
+ ---------------------------------
+ 
+ >> Security Enhanced Linux (SELinux) provides an additional layer of system security.
+    SELinux is a security mechanism built into the Linux kernel.
+    Linux distributions such as CentOS, RHEL, and Fedora are equipped with SELinux by default. 
+    SELinux improves server security by restricting and defining how a server processes requests 
+    and users interact with sockets, network ports, and essential directories .
+	
+>>  SELinux is a Linux Security Module (LSM) that is built into the Linux kernel. The SELinux subsystem in the kernel
+    is driven by a security policy which is controlled by the administrator and loaded at boot. 
+	All security-relevant, kernel-level access operations on the system are intercepted by SELinux and examined 
+	in the context of the loaded security policy. If the loaded policy allows the operation, it continues.
+	Otherwise, the operation is blocked and the process receives an error.
+	
+>>  SELinux implements Mandatory Access Control (MAC). Every process and system resource has a special security label 
+	called a SELinux context. A SELinux context, sometimes referred to as a SELinux label, is an identifier
+ 	which abstracts away the system-level details and focuses on the security properties of the entity.
+	Not only does this provide a consistent way of referencing objects in the SELinux policy, 
+	but it also removes any ambiguity that can be found in other identification methods; 
+	for example, a file can have multiple valid path names on a system that makes use of bind mounts.
+	
+>> The standard access policy based on the user, group, and other permissions, known as Discretionary Access Control (DAC),
+   does not enable system administrators to create comprehensive and fine-grained security policies, 
+   such as restricting specific applications to only viewing log files, while allowing other applications 
+   to append new data to the log files .
+   
+ >> Note:
+
+    >> It is important to remember that SELinux policy rules are checked after DAC rules. 
+    SELinux policy rules are not used if DAC rules deny access first, which means that
+ 	no SELinux denial is logged if the traditional DAC rules prevent the access.
+	
+>>>	SELinux contexts have several fields: user, role, type, and security level
+
+  >> The SELinux type information is perhaps the most important when it comes to the SELinux policy, 
+     as the most common policy rule which defines the allowed interactions between processes and system resources 
+	 uses SELinux types and not the full SELinux context. SELinux types usually end with _t.
+	 For example, the type name for the web server is httpd_t. 
+	 
+	>> To set selinux file context "chcon/semanage" command we can use .
+	
+	example: 
+	
+	  # chcon -t mnt_t /file.txt 
+	  
+	 >> To check selinux file context 
+	 
+	 # ls -lZ /file.txt // For file 
+	 
+	 # ls -ldZ /directory // For directory 
+	 
+	 # semanage fcontext -a -t admin_home_t file.txt  // To change selinux policy using semanage command 
+	 
+	 # restorecon -RFvv  file.txt // To update to changes which executes using semanage command . 
+	 
+	 # ls -lZ file.txt 
+	 
+ 
+ 
+ 
+ Profile for Selinux: 
+ --------------------
+ 
+ Configuration file:
+   > "/etc/selinux/config" // original config file 
+   > "/etc/sysconfig/selinux"  // link file    
+ 
+ log file for selinux :  /var/log/audit/audit.log 
+ 
+ >> SELinux can run in one of three modes: disabled, permissive,  enforcing .
+ 
+ 1> Disabled mode is strongly discouraged; not only does the system avoid enforcing the SELinux policy, 
+    it also avoids labeling any persistent objects such as files, making it difficult to enable SELinux in the future.
+	In disabled mode there is no protection and no logs .
+	
+ 2> In permissive mode, the system acts as if SELinux is enforcing the loaded security policy,
+    including labeling objects and emitting access denial entries in the logs, but it does not actually deny
+	any operations. While not recommended for production systems, permissive mode can be helpful for SELinux policy 
+	development.
+	Even though there is no proper policy define still we can able to access and stores logs .
+	
+ 3> Enforcing mode is the default, and recommended, mode of operation; in enforcing mode SELinux operates normally,
+    enforcing the loaded security policy on the entire system. 
+    If proper policy is defined then we can access or else we can not access and it stores logs .	
+	
+ >> Use the setenforce utility/command to change between enforcing and permissive mode
+ 
+ >> Changes made with setenforce do not persist across reboots.
+    To change to enforcing mode, enter the setenforce 1 command as the Linux root user.
+	To change to permissive mode, enter the setenforce 0 command. 
+	Use the getenforce utility/commands to view the current SELinux mode:
+
+  # setenforce 0 // Permissive mode 
+  
+  # getenforce  // To verify 
+  
+  # setenforce 1 // Enforcing mode 
+  
+  >> To change permanetly from enforcing or permisive mode to disabled mode and vice versa  we required to update in selinux config file .
+  And do not forget to reboot after this .
+
+    example: 
+	
+	   vi /etc/selinux/config
+	   
+	   SELINUX=disabled 
+	   
+	   :wq 
+	   
+	   
+	   # reboot 
+	   
+	   # getenforce // To verify 
+
+  
+  what is selinux boolean ? 
+  
+  Ans: Booleans are rules which can enable or disable .
+   Boleans allow parts of SELinux policy to be changed at runtime, without any knowledge of SELinux policy writing.
+  
+  
+   >> To list all booleans 
+   -----------------------
+     # getsebool -a 
+	    (or)
+		
+     # semanage boolean -l // This command we can get after appropriate package installation (yum install policycoreutils* -y)
+	 
+	 >> To set selinux booleans 
+	 ----------------------------
+	 
+	 # setsebool -P ftpd_full_access on	 // To enable
+     # setsebool -P ftpd_full_access 1 //to enable
+	 # setsebool -P ftpd_full_access off //to disable 
+	 # setsebool -P ftpd_full_access 0 // To disable 
+	 
+	 
