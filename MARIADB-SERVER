@@ -1,0 +1,311 @@
+MARIADB: 
+========
+
+>> What is MariaDB?
+ 
+ >> MariaDB is a fork of the MySQL database management system. It is created by its original developers.
+ This DBMS tool offers data processing capabilities for both small and enterprise tasks.
+
+>> MariaDB is an improved version of MySQL. It comes with numerous inbuilt powerful features and 
+   many usabilities, security and performance improvements that you cannot find in MySQL.
+   
+   
+>>  MariaDB supports PHP, a popular language for web development.
+ MariaDB can run on different operating systems, and it supports numerous programming languages.
+ MariaDB comes with additional commands that are not available in MySQL.
+ MySQL has features which have a negative impact on the performance of the DBMS.
+ Such features have been replaced in MariaDB.
+ 
+ RDBMS: 
+ =========
+ 
+ >> A relational database management system (RDBMS) is a collection of programs and capabilities that enable IT teams and others to create, update,
+   administer and otherwise interact with a relational database. RDBMSes store data in the form of tables, with most commercial relational database management 
+   systems using Structured Query Language (SQL) to access the database.
+ 
+ 
+ Profile for mariadb: 
+ ====================
+ Packages : mariadb-server , mariadb-client 
+ 
+ service/daemon : mariadb.service 
+ 
+ coniguration file : /etc/my.cnf 
+ 
+ port: 3306
+ 
+ log file for mariadb : /var/log/mariadb/mariadb.log
+ 
+ >> To install mariadb package 
+
+  # yum install epel-release -y 
+ 
+  # yum list all | grep mariadb  
+  # yum install mariadb* -y 
+ 
+ >> To start daemon for mariadb 
+ ================================
+ 
+ # systemctl start mariadb
+ 
+ # systemctl enable mariadb
+
+ # systemctl status mariadb 
+ 
+ # systemctl is-active mariadb 
+
+ # systemctl is-enabled mariadb
+ 
+ >> To set db root user password :
+ 
+ # mysql_secure_installation
+
+   > (press enter)
+   
+   >y
+    passwd:.....
+	passwd: ....
+	
+	> y
+	
+	> y
+	
+	> y
+	
+	> y
+	
+	
+ >> To login into mariadb database :
+ 
+   # mysql -u root -p    /// (Good@2021)
+   
+    // to list databases 
+   
+       > show databases ;
+	
+   // To go inside a database ;
+	
+	> use mysql ;
+
+    // To list Tables inside a database
+    
+     >> show tables ;
+
+    // to list content of tables ;
+	
+	> select * from mysql.user ;
+	
+		
+	// To create a new database 
+	
+	> create database test_db ; 
+	
+	> use test_db	
+
+
+CRUD operaration in mariadb/mysql : 
+====================================
+
+ >> MySQL provides a set of some basic but most essential operations that will help you to easily interact 
+   with the MySQL database and these operations are known as CRUD operations.  
+
+ C = create 
+ R = read 
+ U = update 
+ D = delete 
+   
+   > create table student (Name varchar(20), Reg_No int(10),Age int(3));
+	
+	// To check table 
+
+        > show tables ;
+
+       // To describe table 
+
+        > desc student ;
+
+       // To insert values inside table 
+
+         > insert into student values ('sam', 101, 28) ;
+
+         > insert into student values ('ram', 102, 29) ;
+   
+         > insert into student values ('hari', 103, 30) ;
+
+       // To verify table contents 
+
+        > select * from student ;
+       
+      >> To update table 
+      
+       > update student set  Name="balia" where Reg_No=10100002; 
+      
+       > select * from student where Reg_No=10100002;
+
+       // To delete row from a table in database 
+
+       > delete from student where Reg_No=10100002;
+
+       > select * from student;
+ 
+
+      // To create local user in database 
+
+
+      > create user kalia@"localhost" identified by "redhat" ;
+
+     // To create remote database user 
+
+      > create user balia@"%" identified by "redhat1" ;
+
+     // To check user created or not (Note: All mariadb database user information are stored inside  "user" table in "mysql" database )
+
+     > select user,host from mysql.user ; 
+
+    // To give permission to database user 
+
+    > help grant ;  // To check examples
+
+    > grant select,insert,update,delete on test_db.* to kalia@'localhost';
+
+    > grant all on test_db.* to balia@"%"; 
+
+    // To update the changes 
+
+    > flush privileges ;
+
+   // To check permission for a user 
+
+    > show grants for balia@'%' 
+
+     // To remove permission from a user on a database 
+
+    > help revoke ;    // To check examples 
+
+    > revoke all on test_db.* from balia@'%' ;
+
+   // To update the changes 
+
+    > flush privileges ;
+
+
+    // to list permission for a user on database 
+
+    > show grants for kalia@'localhost';
+
+ // try to login in db using local user .
+
+   # mysql -u kalia -p 
+   
+    > show databases ;
+    
+    > use db_name ;
+
+   > show tables ;
+
+   > select * from table_name ;
+   
+   > exit 
+
+   # mysql -u root -p
+
+    > show databases ;
+    
+    > use db_name ;
+
+    > show tables ;
+
+   > drop table <table_name>; // to delete table from a database 
+
+   > drop database <dbname> ; // to delete database 
+
+   // To clear screen in mysql/mariadb .
+
+    > system clear  (or) ctrl+l 
+
+   > exit 
+
+ // How to access mariadb database remotely .
+
+
+ > create a mariadb repo in client machine 
+
+#  vim /etc/yum.repos.d/MariaDB.repo  
+   
+   [mariadb]
+   name = MariaDB
+   baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+   gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+   gpgcheck=1
+
+   :wq! 
+
+
+>>> Update yum cache index:
+
+# sudo yum makecache fast
+
+# yum -y install MariaDB-client // after installing this package u will get "mysql" command 
+
+
+ // Now lets try to access database remotely on client machine
+
+  # mysql -u <username> -p -h <db_server_hostname/ipaddress> (only use systemuser)
+
+  // To block remotly not to access mariadb database use "skip-networking=1"   in config file and restart the daemon  in server machine.
+
+ [root@node1 ~]# cat  /etc/my.cnf
+
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+skip-networking=1       
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+
+[mysqld_safe]
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+
+#
+# include all files from the config directory
+#
+!includedir /etc/my.cnf.d
+
+  :wq!
+
+  # systemctl restart mariadb  
+
+// Now again go to client machine and try to acccess database, you can not access .
+
+[root@worker1 ~]# mysql -u jk3 -p -h node1
+Enter password:
+ERROR 2002 (HY000): Can't connect to MySQL server on 'node1' (115)
+
+
+ >> To take database backup "mysqldump" is the command
+
+  # mysqldump  -uroot -predhat <test_db>  > /tmp/test_db.bkp (create linux mechine)
+
+ >> Now login to mariadb database and delete the <test_db> database . 
+ 
+   # mysql -u root -p 
+
+   > show databases ;
+
+   > drop database <test_db> ;
+
+   > show databases ; // the database you can see deleted
+
+   > create database newdb ;
+
+    
+  # logout then.....
+>>  How to restore backup database .
+
+  # mysql -uroot -predhat newdb < /tmp/test_db.bkp (linux mechine)
+     																																				 
