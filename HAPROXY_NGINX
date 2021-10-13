@@ -1,0 +1,147 @@
+Nginx: 
+=======
+
+ plz follow this link to more :  https://in.godaddy.com/blog/install-configure-nginx-centos-7/ 
+ 
+ 
+>>> Nginx (pronounced ‘engine X’) is an alternative to Apache and is considered to be one of the most popular HTTP web servers
+    in the world. As opposed to Apache, Nginx tends to consume fewer resources and improves server responsiveness. 
+	Its event-driven design is what makes it resource-friendly.
+
+>>> Above all, it allows admins to set up advanced configurations and can deal with a high load of concurrent connections.
+   Besides being a good fit for an HTTP web server, Nginx also works as a reverse proxy, load balancer, and standard mail server.
+   
+   
+>> Profile for Nginx: 
+  -------------------
+  
+  > package Name : nginx 
+  
+  > Daemon/service: nginx 
+  
+  > config file: /etc/nginx/nginx.conf 
+  
+  > default root directory: /usr/share/nginx/nginx
+  
+  > port number : 80, 443
+  
+  
+  # yum install epel-release -y 
+
+  # yum install nginx -y 
+
+  # systemctl enable nginx ; systemctl start nginx ; systemctl  status nginx 
+  
+  # echo "<h1>This is first nginx web server</h1>" > /usr/share/nginx/html/index.html 
+
+  # systemctl restart nginx 
+
+  # curl http://<ipaddress> // To check web content 
+
+  # firewall-cmd --permanent  --add-service=http 
+
+  # firewall-cmd --reload 
+
+  # firewall-cmd --list-all 
+
+>> HAPROXY CONFIGURATION: 
+ -------------------------
+
+>>> HAProxy stands for High Availability proxy. It is a Free and open source application written in C programming Language.
+    HAProxy application is used as TCP/HTTP Load Balancer and for proxy Solutions. The most common use of the 
+    HAProxy application is to distribute the workload across multiple servers 
+    e.g., web server, database server, etc thus improving the overall performance and reliability of server environment.
+
+
+>>> Layer 4 and Layer 7 :
+=========================
+   >>> HAProxy can run in two modes: TCP mode Layer 4 and HTTP Mode Layer 7. In Layer 4 TCP mode, HAProxy forwards the 
+       RAW TCP packets from the client to the application servers. In the Layer 7 HTTP mode, HAProxy is parsing the HTTP header 
+       before forwarding them to the application servers. In this tutorial, we will use Nginx as the web server 
+       that only supports the Layer 7 HTTP mode.
+
+
+>>> The configuration file is divided into four major sections.
+    global settings – :  sets process-wide parameters.
+    defaults –:  this section sets default parameters for all other sections following its declaration.
+    frontend –:  this section describes a set of listening sockets accepting client connections.
+    Backend –:  this section describes a set of servers to which the proxy will connect to forward incoming connections.
+
+ Note: To get more details plz follow haproxy offictial sites :  
+
+
+
+ >> Algorithm: 
+===============
+>>> This is the algorithm that is used by HAProxy to select the server when doing the load balancing. 
+    The following modes are available:
+
+
+ >> Roundrobin : 
+===============
+>> This is the most simple balance algorithm. For each new connection, it will be handled by the next backend server.
+   If the last backend server in the list is reached, it will start again from the top of backend list.
+
+
+>>> Lastconn: 
+    =========
+
+>>> The new connection will be handled by the backend server with least amount of connections.
+    This is useful when the time and load of the requests vary a lot.
+   
+>>> Source :
+    ======
+ >> This is for sticky sessions, the client IP will be hashed to determine the backend server that received
+    the last request from this IP. So an IP A will always be handled by backend1, and IP B will always be handled by banckend2
+    to not interrupt sessions
+
+
+
+ >>> profile for haproxy: 
+========================
+  -> package name : haproxy 
+  -> configuration file: /etc/haproxy/haproxy.cfg 
+  -> daemon/service : haproxy
+  -> 
+   
+  
+ # yum install epel-release -y 
+  
+ # yum install haproxy -y  
+
+ # systemctl enable haproxy 
+
+ # vim /etc/haproxy/haproxy.cfg 
+
+  # Go to  frontend section end  use comment and provide this entry 
+
+#################################### 
+
+ frontend haproxy_http
+          bind  *:80
+          mode http
+          default_backend nodes_http
+
+#################################################
+
+ # Go to backend section end use comment and provide this entry 
+
+######################################
+ backend nodes_http
+         balance roundrobin
+         server worker1 172.16.16.101:80 check
+         server worker2 172.16.16.102:80 check
+  
+#####################################################################  
+  
+:wq
+
+ # systemctl start haproxy 
+
+ # systemctl status haproxy 
+
+ >> Now we can check using loadbalancer ip/hostname using curl command 
+
+ # curl http://<ipaddress> // loadbalancer ip and try twice to understand algorithm function 
+
+
