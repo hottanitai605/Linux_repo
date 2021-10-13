@@ -1,0 +1,131 @@
+Service/Daemon Management:
+=========================
+
+What is service/Daemon ?
+
+ Ans:  A Linux service is an application (or set of applications)/Programs that runs in the background waiting to be used, or carrying out essential tasks.
+       Sometimes the name of these services or daemons ends with the letter d.
+   
+   example: sshd,httpd,vsftpd,
+
+ In rhel7 service or daemons known as init scripts file .
+
+ >> To manage(start,stop,restart,enable,disable) the services in rhel7 we can use a command called "systemctl" or "service" .
+
+
+ >> To start, stop and restart a service/daemon is temporary means still server is running .
+
+ >> To enable/disable a servive/daemon is permanent accross reboot .
+
+ >> To see available unit types .
+
+  # systemctl -t help 
+
+ Where the unit script file available in rhel7 ? 
+
+ "/usr/lib/systemd/system" 
+
+ # cd /usr/lib/systemd/system/
+
+ #ls *.service
+
+ # ls *.target 
+ # ls *.socket
+
+>> How to check  the status of a daemon/service ?
+
+ # systemctl status  <servicename>
+
+ # systemctl status  sshd 
+
+   (or)
+
+# service sshd status 
+
+ how to start a service ? 
+
+# systemctl start <ServiceName>
+# systemctl start sshd
+
+   (or)
+
+# service sshd start 
+
+How to stop a service ?
+
+ # systemctl stop <ServiceName> .
+ # systemctl stop sshd 
+
+   (or)
+
+ # service  sshd stop .
+
+How to restart a service ?
+
+>> Restart a service means stop and start .
+ 
+ # systemctl restart sshd 
+
+ # service sshd restart . 
+
+>> If a service is enabled/disable mode then temporarly we can start or stop still the session is going on .
+
+ >>   A service enable means accross reboot service will be active no matter before reboot atcive or inactive .
+
+ >> A service disable means accross reboot service will be inactive no matter before reboot active or inactive .
+
+To enable a service . 
+
+ # systemctl enable sshd 
+
+TO disable a service .
+
+ # systemctl disable sshd 
+
+ Note:  Using "service" command we can not enable or disable a service .
+        To enable or disable a service permanetly we can use "chkconfig" command .
+
+  ex: 
+   
+    # chkconfig sshd on (For Enable a service)
+
+    # chkconfig sshd off (For disable service )
+
+  
+>> How to reload systemd manager configuration .
+
+  # systemctl reload-systemd 
+
+  To check service is active or inactive .
+
+  # systemctl is-active sshd 
+
+ To check service is enable or disable .
+
+  # systemtcl is-enabled sshd 
+
+------
+What’s the difference between a service and process?
+
+Ans: 
+-----
+ Let’s start out by discussing first what the difference between a service and a process is. 
+ In Linux a service is just another name for a daemon, which is a client / server application that runs in the background. 
+ A service is continuously listening for incoming requests and sends a response based on the request given. 
+
+>> A process is simply an application or a script which can be running in the foreground or the background.
+
+ What is the parent process in linux ? 
+
+ In rhel7 perent process name is "systemd" . But in rhel6 the parent process name is "init" .
+
+ >> The process id of parent process always 1 .
+
+ >> To check the process name by using process id .
+  # ps -p 1 
+
+ >> To check the process id by using process name .
+
+ # pidof systemd 
+ 
+
