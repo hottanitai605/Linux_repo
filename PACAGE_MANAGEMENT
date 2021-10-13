@@ -1,0 +1,238 @@
+Package Management in Linux : 
+
+>>> Managing package means install, uninstall , upgrade , Downgrade etc.. 
+
+>>> In Linux we can manage packages using two different tools such as "rpm" and "yum" .
+
+>>> RPM: (Redhat Package Manager) -
+    RPM is a popular package management tool in Red Hat Enterprise Linux-based . 
+    
+    It is used to  manage package which  does not have any dependency .
+
+    In Linux package looks like :  Name-Version.release.architecture.extention
+
+   >> When we manage a package in  linux using rpm tool the package should available in local machine .
+   >> when we install any package using rpm the extention should be required  means full package name required .  
+
+  >> The rpm database location in /var/lib/rpm/
+
+  # rpm  -i	Installs a package
+         -v     verbose or viewing
+         -vv     extra verbose 
+         -h     to show human readable progress report .
+         -U	Upgrades a package
+         -e	Erases a package
+         -q	Queries a package   
+         -a     all packages  
+         -c     to list all configuration file 
+         -l     to list  all files 
+         --nodeps To install a package without any dependency .
+
+  To install a package .
+
+  # rpm -i <full_package_name> 
+
+  # rpm -ivh  <full_packagename>
+
+  To verify all the installed package 
+
+  # rpm -qa 
+
+   To filter one installed package 
+  # rpm -qa | grep <package_name>
+
+  To uninstall/erase a package 
+
+  # rpm -e <package_name>
+
+  # rpm -ev <package_name> 
+
+  # rpm -evv  <package_name> 
+
+  To list the scripts which used for the installed package 
+
+  # rpm -q --scripts <Package_name>
+
+  To list all files about the installed package 
+  # rpm -ql <zsh>
+
+ >> To list all configuration for the installed package 
+
+  # rpm -qc <package_name>
+
+ >> To install a package without dependency .
+
+  # rpm -ivh --nodeps <full_package_name> 
+  >> To upgrade the package .
+  # rpm -Uvh <Full_Package_Name>  
+
+ 
+
+Note: step1> Make a connection with internet to your vertual machine .
+         
+        # ping google.com
+        #ping  8.8.8.8
+
+        # ip a s // check your interface address  
+
+   
+     network configuration file : 
+
+     /etc/sysconfig/network-scripts/ifcfg-enp0s3 // "Go inside this and make onboot=yes" and save then reboot your vm .
+
+    step2> Check ip address of your interface .
+
+         # ip a s 
+
+         ping to google 
+
+        # ping -c4 8.8.8.8
+
+      >> install epel-release package 
+
+       # yum install epel-release -y  
+             
+      >> To get yumdownloader command install this below package 
+
+      # yum install yum-utils -y 
+   
+     >> To download any package using yumdownloader .
+
+      # yumdownloader zsh 
+
+      # yumdownloader httpd 
+
+      # yumdownloader  vsftpd 
+     
+      Now check  local machine present working directory .
+
+      #pwd 
+      #ls 
+      
+  ########################################
+yum(yellow dog update modified)  :   
+---------------------------------
+    It is tool which is used to manage packages .
+    yum supports dependecy while installing any package but rpm does not support .
+    while installing any package using yum extention is not mandetory .
+    
+
+  yum configuraion file :
+  --------------------
+   /etc/yum.conf 
+
+  yum cache directory :
+----------------------
+  /var/cache/yum 
+
+ yum repo directory path :
+--------------------------
+ /etc/yum.repos.d/
+
+>> Repo directory contains repository files and this files extention should be ex:  anyname.repo 
+>> Repository file contains packages .
+
+How to create a repo file .
+
+>> Repo file can be create using 3 ways such as 
+
+ 1> By mounting iso file we can create a repofile .
+
+ 2> we can create repofile using ftp(file trafer protocol) .
+
+ 3> we can create repo file using http . . 
+
+Lets create a repo file :
+
+ #  cd /etc/yum.repos.d/ 
+ # ls -l // To list number os repo files 
+# vi scion.repo
+[cent_os1]  // repoid should be unique and single world and should be represent in squre bracket 
+
+name="centos repo" // it is the repo name
+
+baseurl=file:///redhat/   // Baseurl is the link where packages avalable .
+
+enabled=1 // To allow install packages from baseurl link and if "enabled = 0"   means it will not allow to install any package from this repo .
+
+gpgcheck=0 // While install any package from given baseurl link, it should not ask  any  gpgkey and if "gpgcheck=1" there it will ask gpgkey .  
+
+:wq!
+
+# yum clean all   // it will clean the yum cache 
+
+# yum repo list  // It will list number of packages available from created repo file  .
+
+# yum repoinfo // To show the repo details .
+
+
+# yum list all // To list all available packages 
+
+# yum list installed  // To list all installed packages 
+
+# yum list installed | grep <package_name> 
+
+# yum search <package_name> // To search a package 
+
+# yum info  < package_name > // To show package details 
+
+# yum install <package_name>  // To install a package  
+
+------------(y/n/d)y 
+
+# yum install <package_name> -y // To download package without asking conformation .
+
+# yum  reinstall <package_name> -y // To install same package once again .
+
+# yum remove < package_name > -y // To remove the package  
+      (or)
+# yum erase <package_name> -y // 
+# yumdownloader <package_name> // To download package local machine under present working directory 
+
+ yum logs file :
+--------------
+/var/log/yum.log 
+
+yum database path :
+----------------------
+ /var/lib/yum/ 
+
+#####################
+To create repo :
+================
+step-1>> Top manu bar go to devices->Opticatl Drives->Chooses disk file (select graphical iso image) 
+step-2>> open terminal and execute command 
+        # df -Th  // to list all mounted filesystem and find your iso image mounted path .
+
+step-3>> Go to  that iso mounted path 
+      
+       # cd  "path of mounted iso image" 
+       # ls 
+
+step-4>> To create a directory under / and  copy  all contents from current directory to  newly created directory 
+
+      # mkdir  /centos 
+
+      # cp  -av * /centos/
+      # ls  -l /centos/ 
+
+step-5>> Go to yum repo directory .
+
+      # cd /etc/yum.repos.d/
+      # ls  -l 
+      # mv * /tmp/
+
+      # pwd // check again whether you are under yum repo directory 
+      # vi  india.repo 
+       [linux]
+       name="centos repo"
+       baseurl=file:///centos/
+       enabled=1
+       gpgcheck=0
+   
+     :wq!
+
+     # yum clean all 
+     # yum repolist
+     
+     
