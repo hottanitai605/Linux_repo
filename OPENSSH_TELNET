@@ -1,0 +1,207 @@
+
+   
+   >>>   OpenSSH is the premier connectivity tool for remote login with the SSH protocol. 
+It encrypts all traffic to eliminates connection hijacking, and other attacks. 
+In addition, OpenSSH provides a large suite of secure tunneling capabilities, several authentication methods, 
+and sophisticated configuration options.
+
+The OpenSSH suite consists of the following tools:
+
+Remote operations are done using ssh, scp, and sftp.
+
+Key management with ssh-add, ssh-keysign, ssh-keyscan, and ssh-keygen.
+
+The server side consists of sshd, sftp-server, and ssh-agent.
+
+Why Use OpenSSH And Over Telnet Or Ftp?
+  
+>>> The most important reason why should use OpenSSH tools over ftp and telnet is that all communications
+    and user credentials using OpenSSH are encrypted, they are also protected from man in the middle attacks.
+    If a third party tries to intercept your connection, OpenSSH detects it and informs you about that.
+
+Profile for openssh:
+--------------------
+--------------------
+
+Package name:  openssh-server, openssh-clients
+
+daemon/service: sshd
+
+port number: 22 
+
+configuration file: /etc/ssh/sshd_config
+
+To access remote machine using ssh protocol : 
+---------------------------------------------
+
+ex-1>>: ssh  <remotemachine name/ipaddress> 
+
+ex-2>> ssh <remotemachine name/ipaddress> -l <username/login_name>
+
+ex-3>> ssh <username/login_name>@<remotemachine_name/ipaddress>
+
+
+How to execute commands in remote machines using ssh command by stting in your local machine 
+===========================================================
+
+ ex:>> ssh <username/login_name>@<remotemachine_name/ipaddress> -- ls -l /
+
+ ex:>> ssh <username/login_name>@<remotemachine_name/ipaddress> -- cat /etc/hosts
+
+How to use password less authentication using ssh ?
+===================================================
+
+ex: ssh-keygen (hit enter 3 times ) 
+
+>>> The authenticatin keys such as private and public keys are stored 
+    under current loggedin users home directory under there is a hidden folder called ".ssh"
+>>> To go to that location 
+
+  # cd /home/loggedin_username/.ssh/
+
+>>> Now you can list to see the keys 
+
+ # ls -l 
+  "id_rsa" is private key 
+  "id_rsa.pub" is public key 
+
+Q. How to copy ssh public key to the remote machine ?
+
+Ans: # ssh-copy-id username@<remote_machinename/ipaddress>
+
+-->> Once we copy ssh public key it stores under ~/.ssh/authorized_keys in remote machine user account .
+
+
+Q. Where the ssh public key stored after copy to remote machine ?
+
+Ans: It stores under remote machine users home directory >> .ssh
+
+
+  ex: cd /home/username/.ssh/ (or) ~/.ssh 
+
+  # ls  // here you can find a file name authrised_keys file .
+
+
+Q. How to protect root loggedin remotly .
+Ans: Go to ssh config file 
+
+ #   vi /etc/ssh/sshd_config
+ Go to line number 38 and uncommect that line 
+     PermitRootLogin no // change yes to no  
+  
+  :wq 
+
+ >> To update the changes in ssh config file 
+  
+ # systemctl  restart  sshd 
+
+
+>> No go to other  node  and try to login this machine 
+
+ # ssh  root@<ipaddress> // you can not login to root user account 
+
+Q. How to protect normal user account remotly access using ssh .
+
+ Ans: Go to ssh config file 
+
+
+    # vi  /etc/ssh/sshd_config
+     Go to last line 
+     DenyUsers  kalia 
+
+   :wq 
+
+   # systemctl restart sshd 
+
+ >> Go any other node and try to access this node .
+
+  # ssh kalia@<ip/hostname> 
+
+Q. How to deny a group using ssh .
+
+Ans: 
+     # uaerdd u1
+     #passwd u1
+     #useradd u2 
+     #passwd u2
+     #userdd u3
+     #passwd u3
+
+     # groupadd admin
+     # gpasswd -M u1,u2,u3 admin
+
+     Go to ssh config file 
+     # vi /etc/ssh/sshd_config 
+
+      Go to end of the line 
+
+     DenyGroups admin
+
+   :wq 
+   
+   # systemctl restart sshd 
+
+  >> Now go to other node and try to login any user which belongs to that group .
+
+ 
+Q. How to protect a node using ssh so that can not be access to any account  .
+
+Ans: Go to ssh config file 
+
+   # vi /etc/ssh/sshd_config
+     Go to line number 65 
+     PasswordAuthentication yes // make it "no" 
+
+    :wq 
+   # systemctl restart sshd 
+
+>> Go to other node and try to access any account using ssh .
+
+ 
+##################################### 
+
+TCP WRAPPERS CONFIGURATION FILES
+================================
+
+  In which service/daemon "libwrap.so" module is loaded we can protect that service over network using TCP Wrapper .
+
+How to check modules of a service/daemon ? 
+
+ Ans: By using "ldd" command we can list modules in a service/daemon .
+
+      # which <service/daemon>
+      # which sshd 
+
+      # ldd /usr/sbin/sshd | grep -i "libwrap.so"
+
+
+
+    To determine if a client is allowed to connect to a service, TCP Wrappers reference the following two files, 
+   which are commonly referred to as hosts access files:
+ 
+  /etc/hosts.allow
+  /etc/hosts.deny
+
+      When a TCP-wrapped service receives a client request, it performs the following steps:
+     
+     It references /etc/hosts.allow — The TCP-wrapped service sequentially parses the /etc/hosts.allow file and
+     applies the first rule specified for that service. If it finds a matching rule, it allows the connection. 
+     If not, it moves on to the next step.
+
+    It references /etc/hosts.deny — The TCP-wrapped service sequentially parses the /etc/hosts.deny file. If it finds 
+    a matching rule, it denies the connection. If not, it grants access to the service.
+
+    The following are important points to consider when using TCP Wrappers to protect network services:
+    Because access rules in hosts.allow are applied first, they take precedence over rules specified in hosts.deny. 
+    Therefore, if access to a service is allowed in hosts.allow, a rule denying access to that same service in hosts.deny
+     is ignored.
+
+    The rules in each file are read from the top down and the first matching rule for a given service is the 
+    only one applied. The order of the rules is extremely important.
+
+   If no rules for the service are found in either file, or if neither file exists, access to the service is granted.
+
+  >>> TCP-wrapped services do not cache the rules from the hosts access files, so any changes to hosts.allow or hosts.deny
+      take effect immediately, without restarting network services  
+
+
