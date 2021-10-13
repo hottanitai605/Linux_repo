@@ -1,0 +1,747 @@
+
+
+What is Storage?
+
+Ans: Storage is a mechanism that enables a computer to retain data, either temporarily or permanently.
+
+    Storage devices such as flash drives and hard disks are a fundamental component of most digital devices
+   since they allow users to preserve all kinds of information such as videos, documents, pictures and raw data.
+
+Common storage devices that are in use or have been used in the past include:
+
+Hard disks.
+Flash drives.
+Floppy diskettes.
+Tape drives.
+CD-ROM disks.
+Blu-ray disks.
+Memory cards.
+Cloud drives.
+
+
+
+External storage devices
+=============================
+
+External HDDs and SSDs. ...
+Flash memory devices. ...
+Optical Storage Devices. ...
+Floppy Disks. ...
+Primary Storage: Random Access Memory (RAM) ...
+Secondary Storage: Hard Disk Drives (HDD) & Solid-State Drives (SSD) ...
+Hard Disk Drives (HDD) ...
+Solid-State Drives (SSD)
+
+
+
+>>> In enterprise storage, two concepts are at the core of most conversations: 
+storage area networks (SAN) and network-attached storage (NAS).
+Both options provide storage to clients across a network, which offers the huge benefit
+of removing individual servers as single points of failure. Using one of these options also reduces the cost
+of individual clients, as there is no longer a need to have large amounts of local storage.
+
+http://ilta.personifycloud.com/webfiles/productfiles/1971/ImplementingSANandNASinLinux.pdf // Follow the link 
+
+Disk Partioning:
+===============
+>>> Partitioning enables you to split your hard drive into multiple parts, where each part acts as its own hard drive 
+ and this is useful when you are installing multiple operating systems in the same machine.
+
+ Note: Different types of harddisk are stored under "/dev" .
+
+Ex: /dev/sda // 1st sata disk
+
+    /dev/sdb // 2nd stat disk 
+    
+    /dev/sdc // 3rd sata disk like wise 
+
+    /dev/vda // 1st virtual disk
+    
+    /dev/vdb // 2nd virtual disk 
+
+   
+  /dev/sdb1 // 2nd sata disk 1st partition 
+
+  /dev/sdb2 // 2nd sata disk 2nd partition 
+
+  /dev/sda3 // 3rd sata disk 3rd partition 
+
+   /dev/vda4  // 1st virtual disk 4th partition
+
+
+   /dev/sdc9 // 3rd Sata Disk 9th partition 
+
+
+  /dev/sdb5  // 2nd sata disk 5th partition 
+
+
+################################################
+
+>> In a hard disk total we can create 15 partitions .
+
+>> In a hard disk we can create maximum 4 praimary partitions but recomonded is 3 primary and 1 extended partition .
+
+>> Using Extended partition we create again more number of logical partitions .
+
+ 
+
+>> Primary partion are used to install os or we can use to store other date .And Primary partition id is "83" .
+
+>> Extended partition directly we can not use to store data and id for extended partition is "5" .
+
+>> Logical partition we can use to store data not installing os and id for logical partition is "83" .
+
+>> partition id for swap is "82" .
+
+>> partition id for lvm is "8e" .
+
+
+
+>> In a raw disk we can not store data util unless we apply filesystem .
+
+
+>> There are different types filesystem type available in linux such as .
+
+  ->  ext2 
+  ->  ext3
+  ->  ext4
+  ->  xfs
+  ->  swap  // For swap partiting 
+  ->  vfat // this type filesystem is used in both windows and linux .
+  -> btrfs
+  -> iso9660 // To mount iso image we use iso9660 filesystem type .
+
+
+>> Windows types of filesystem are :  ntfs , fat32 
+
+
+>> To manage disk partitioning we can use "fdisk" (or) parted command.
+
+>> To list disk partitioning 
+
+  # fdisk -l  
+
+    (or) 
+
+  # lsblk 
+
+>> To create disk partitioning .
+
+  # fdisk /dev/sdb 
+
+  >type "m" for help 
+
+  >n(create new partition)
+  >p (print partition table) 
+  >d(to delete partition)
+  >q(to quit without saving)
+  >w(save and exit)
+  >t(to change partition id)
+
+ # partprobe /dev/sdb //To update with kernel
+
+
+ >> To list disk pritition 
+
+ # fdisk -l /dev/sdb 
+
+  (or)
+
+ # lsblk
+
+ >> To apply filesystem to disk partition "mkfs" command is used .
+
+ # mkfs -t ext4 /dev/sdb1 
+
+
+ # mkfs -t xfs /dev/sdb2
+
+
+    (or)
+
+ # mkfs.ext4  /dev/sdb3 
+
+ 
+ # mkfs.xfs /dev/sdb4 
+
+
+>> To check filesystem applied to a disk partition or not "blkid" command is used .
+
+
+ # blkid // It will list all applied file system .
+
+  (or)
+
+ # blkid /dev/sdb1    // inidivisually  to check filesystem applied or not 
+
+
+>> To store data in a applied filesystem we required a mount point and mount point is any directory under "/" in linux. 
+
+
+  # mkdir /redhat 
+
+
+>> To mount a filesystem temporarily "mount" command is used .
+==============================================================
+
+  # mount -t ext4  /dev/sda1  /redhat 
+
+  # mount  -t xfs  /dev/sdb4 /xyz 
+
+
+>> To check filesystem is mounted or not .
+
+  # mount // it will list all mounted filesystem 
+
+  # mount | grep -i "/redhat"
+
+       (or) 
+
+  # df -Th // to list all mounted filesystem 
+
+
+  # df -Th | grep -i "/xyz"
+
+  # cd /redhat 
+
+  # touch file(1..4000).txt // this files used the filesystem space /dev/sda1 .
+
+########################################################
+#######################################################
+
+ >> To unmount the mount point temporary "umount" command is used
+
+ # umount <mountpoint>
+
+  >> To mount permanetly to a filesystem we use "/etc/fstab" config file .
+
+  >> "/etc/fstab" having 6 field such as 
+
+    1> "filesystem_name/uuid of filesystem" 
+
+    2> mount point (it is a directory where to mount)
+
+    3> filesystem type (such as ext3/ext4/xfs  etc..)
+
+    4> mount option // Usually we use mount option is "defaults" which contains some permissions .    
+
+    5> dump flag ( if dump flag value 1 means needs to take backup using dumpcommand and dump flag 0 means no dump required )
+
+    6> fsck check ( "/" filesystem value always "1" means while reboot it will check filesystem integrity if filesystem currepted or not and other 
+                     filesystem value will be 2 3 .. accordingly and "0" value means no fsck enable)  
+
+
+  >> To check filesystem applied or not 
+   
+   # blkid 
+
+   # blkid <partition name> // it will show filesystem name , uuid of filesystem , type of filesystem 
+
+ >> To mount permanetly 
+
+   # mkdir <directory>
+
+ >> provide mount information inside fstab .
+
+  # vi /etc/fstab 
+  
+   <filesystemname/uuid of filesystem>  /<mount point>  <type of filesystem> <mount option>  <dump_flag> <fsck_order>
+
+ ex:  /dev/sdb2                          /red           ext4                  defaults          0              0 
+
+ :wq 
+
+>> To update fstab entry 
+
+ # mount -a 
+
+   (or)
+
+ # mount /dev/sdb2 
+
+ 
+>> To unmount permanetly from fstab 
+-----------------------------------
+
+ >> just comment or delete the entry for which mount point needs to be unmount then save the fstab file .
+
+
+ >> To update fstab entry 
+
+  # mount -a 
+
+ >> then finally unmount that point point which you want using "umount" command
+
+  # umount /<mount point> 
+   
+  
+
+Note: 
+=====
+>> If we do not remove or comment fstab entry and only we use  umount command to unmount that is temporary means 
+   after reboot autometically that mount point again show because it is available in fstab .
+
+
+  Q. What is swap ?
+=========================
+
+  >> Swap space in Linux is used when the amount of physical memory (RAM) is full. 
+    If the system needs more memory resources and the RAM is full, inactive pages in memory are moved to the swap space.
+    While swap space can help machines with a small amount of RAM, it should not be considered a replacement for more RAM.
+    Swap space is located on hard drives, which have a slower access time than physical memory.
+    Swap space can be a dedicated swap partition (recommended), a swap file, or a combination of swap partitions 
+    and swap files.
+
+   Note:  that Btrfs does not support swap space.
+
+  >>swap is space on a hard disk that is used when the amount of physical memory is full or reached its
+   threshold value. Then inactive pages are moved from RAM to swap space to make physical memory free to
+  run any other active process .
+
+ >> When this inactive pages again active it will comes from swap to RAM because active page only running
+  RAM & swap area or swap space only used to hold inactive pages.
+
+
+ >> How much swap space you can set in in system based on memory size .
+
+    Ammount of phisical memory:         Ammount of swap memory: 
+   ------------------------------       -----------------------
+         1 Gb                                2GB
+
+         2GB - 8GB                           equal ammount of size  we can create 
+
+         8GB - 64GB                          At least 4Gb
+
+         > 64Gb                              AT least 4GB
+
+
+
+
+
+
+ >> We can create swap space two ways such as --
+
+  1.
+ >> By creating a disk partition we can apply swap filesystem then we can mount permanently under <fstab>.
+
+
+   # fdisk /dev/sdb 
+
+   >m(for help)
+
+   >n // to add new partition
+
+   >p //  Primary 
+   > enter 
+   > enter 
+
+   > +1G 
+
+   > t // To change partition system id
+
+   > l // to list partition ids 
+
+   > 82 // swap partition id 
+
+   > w / to save & exit 
+
+   # partprobe /dev/sdb // To update with kernel 
+
+  >> To verify 
+
+   # fdisk -l /dev/sdb 
+         (or)
+
+   # lsblk 
+
+      
+  >> To apply swap filesystem : 
+
+   # mkswap  /dev/sdb1  
+
+  >> To verify 
+----------------
+
+  # blkid /dev/sdb1 
+
+  >> To active swap space temporarily 
+
+   # swapon  /dev/sdb1  
+>> To check
+-----------  
+ >> free -h 
+
+ >> To make swap permanent using fstab 
+========================================= 
+
+  > For swap mount point is "none"
+
+  > For swap filesystem type is "swap"
+
+  # vi /etc/fstab 
+   
+   /dev/sdb1  none  swap defaults 0 0 
+
+:wq 
+
+ # mount /dev/sdb1 // to update fstab
+
+ # mount -a 
+
+ >> For temporarily swap space creation no need to give any entry in fstab after apply swap filesystem to the
+   disk partition we can used "swapon" command to active swap memory temporary.
+
+ 2.
+ >> Another way to create swap space is we need to create swap file using command "dd".
+
+ ## How to create swapfile ?
+==================================
+
+ To create swapfile in a vm.
+
+ # dd if=/dev/zero  of=/swapfile  bs=1M  count=1024
+
+ # ls -lh  /swapfile // to check the size 
+
+ >> To read & write only by root user ,correct permission is required
+
+  # chmod 600 /swapfile
+
+ To apply swapfile system "mkswap" command is used .
+====================================================
+
+  # mkswap <swapfile name>
+
+
+>> To check swap filesystem applied or not .
+-----------------------------------------------
+
+   # blkid /swapfile 
+
+ To active swap temporarily "swapon" command is used .
+====================
+
+ # swapon /swapfile
+
+>> To active all swap pace : 
+
+ # swapon -a 
+
+>> To virify swap space 
+-----------------------
+
+ # free -h 
+
+   (or)
+
+ # swapon -S  
+
+
+ To inactive swap ?
+========================
+
+  # swapoff /swapfile
+
+ To inactive all swap space : 
+===============================
+
+  # swapoff -a 
+
+
+  >> For swap filesystem type is "swap" & mount point also "none" .
+
+ >> Now lets given entry fstab?
+===================================
+
+  # echo "/swapfile none swap defaults 0 0" >> /etc/fstab
+
+  # mount -a // to update fstab.
+
+  # swapon /swapfile 
+
+  # free -h 
+
+ >>> ####  swappiness ####
+   =============================
+ 
+ >> swappiness is a property for linux kernel that changes the balance between swaping out runtime
+   memory & prevents droping pages on the system page cache.
+ >> swappiness can be set to value between 0 & 100.
+
+ >> A low value means kernel try to avoid swaping as much as possible where a higher value it will 
+   make agressively try to use swap space.
+  
+ >> swappiness is a linux kernel property that sets the balance between swapping out page from the
+   physical memory to the swap space  & removing pages from the page cache. it bassically defines 
+  how often the system will use the swap space
+ 
+  >> "vm_swappiness" is the swappiness parameter which is the defaults set value is <60>.
+ 
+   To checking swappiness value ?
+======================================
+  # cat /proc/sys/vm/swappiness //it will show the default swappiness value is 60.
+
+  >> To permanently change the swappiness value  /etc/sysctl.conf   // file is used.
+=========================================================================================
+   # vi /etc/sysctl.conf
+     vm.swappiness=70
+  :wq!
+   >> To update this config file with kernel
+======================================
+   # sysctl -p
+
+  >> To check swappiness value in command line
+==================================================
+   # sysctl vm.swappiness   
+  
+  >> To set swappiness value in command line
+===================================================
+
+   # sysctl vm.swappiness=10  // it is temporarily.
+
+
+ >> To verify 
+==============
+
+  # sysctl vm.swappiness 
+
+ >> # cat /proc/sys/vm/swappiness 
+
+>> How to Clear RAM Memory Cache, Buffer and Swap Space on Linux:
+-----------------------------------------------------------------
+
+>> 1st check with "free" command .
+-----------------------------------
+
+ # free -h
+
+>> Now clear the cache .
+------------------------
+ 
+Clear PageCache only. # sync; echo 1 > /proc/sys/vm/drop_caches
+
+Clear dentries and inodes. # sync; echo 2 > /proc/sys/vm/drop_caches
+
+Clear PageCache, dentries and inodes. # sync; echo 3 > /proc/sys/vm/drop_caches
+
+
+***************************************************************************
+***************************************************************************
+
+Follow this link and make a note for different type of filesystem :
+---------------------------------------------------------------
+
+https://tusharjadhav29.blogspot.com/2016/12/linux-file-systems-ext2-vs-ext3-vs-ext4.html?m=0
+
+----------------------------------------------------------------------------------------------
+
+unit calculation
+=================
+
+BIT: A bit is a value of either a 1 or 0
+
+Nibble: 1 nibble is 4 bits.
+
+Byte: 1  byte is 8 bits.
+
+Kilobyte (KB): 1 kilobyte is 1,024 bytes.
+
+Megabyte (MB): 1 megabyte is 1,024 kilobytes.
+
+Gigabyte (GB): 1 gigabyte is 1,024 megabytes .
+
+Terabyte (TB): 1 terabyte is  1,024 gigabytes,
+
+Petabyte (PB): 1 Petabyte is 1,024 terabytes.
+
+Exabyte (EB): 1 exabyte is 1,024 petabytes.
+
+Zettabyte (ZB): 1 zettabyte is 1,024 exabytes
+
+Yottabyte (YB): A yottabyte is 1,024 zettabyte
+
+
+LVM(Logical Volume Management): 
+==============================
+
+>>  Logical Volume Manager (LVM) is a device mapper framework that provides logical volume management 
+    for the Linux kernel.
+
+>> The main advantages of LVM are increased abstraction, flexibility, and control .
+
+>> Volumes can be resized dynamically as space requirements change and migrated between physical devices
+   within the pool on a running system or exported easily. LVM also offers advanced features like snapshotting, 
+   striping, and mirroring.
+
+>> LVM functions by layering abstractions on top of physical storage devices.
+
+>> Logical Volume Management (LVM) makes it easier to manage disk space. If a file system needs more space,
+   it can be added to its logical volumes from the free spaces in its volume group .
+
+>> The file system can be re-sized as we wish. If a disk starts to fail, replacement disk can be registered
+   as a physical volume with the volume group and the logical volumes extents can be migrated to the new disk
+   without data loss.
+
+
+Physical Volumes:
+-----------------
+
+>> Physical Volumes are used by LVM as the raw building material for higher levels of abstraction.
+   Physical volumes are regular storage devices. LVM writes a header to the device to allocate it for management.
+
+Volume Groups: 
+--------------
+>>  LVM combines physical volumes into storage pools known as volume groups.
+
+Q. What are Extents? 
+
+Ans: Each volume within a volume group is segmented into small, fixed-size chunks called extents .
+     The extents on a physical volume are called physical extents .
+
+
+Logical Volumes:
+----------------
+
+>> A volume group can be sliced up into any number of logical volumes.
+
+>> Logical volumes are functionally equivalent to partitions on a physical disk, but with much more flexibility.
+
+>> Logical volumes are the primary component that users and applications will interact with.
+
+>>  LVM can be used to combine physical volumes into volume groups to unify the storage space available on a system.
+    Afterwards, administrators can segment the volume group into arbitrary logical volumes, 
+    which act as flexible partitions.
+>> The extents of a logical volume are called logical extents .
+
+>>  A logical volume is simply a mapping that LVM maintains between logical and physical extents .
+
+
+LVM Features
+-------------
+>> It is flexible to expand the space at any time.
+>> Any file systems can be installed and handle.
+>> Migration can be used to recover faulty disk.
+>> Restore the file system using Snapshot features to earlier stage
+
+
+>> To create pv  
+================
+
+  1st create a disk partition and use that partition to create pv .
+
+example: 
+ # pvcreate /dev/sdb1
+
+>>  To versify 
+-------------
+# pvs (or) pvdisplay
+
+>> To create VG 
+-----------------
+
+> VG we can create two way such as 
+
+Example: 
+
+ # vgcreate myvg /dev/sdb1 
+
+      (or)
+
+ # vgcreate -s 16M myvg /dev/sdb1 // Here we can manually assign PE(Phisical Extend) 
+
+>> To verify 
+-------------
+
+ # vgs (or) vgdisplay 
+
+>> To create lv from a Volume Group(VG) 
+---------------------------------------
+
+> We can create Lv in three way such as 
+
+1> Size format 
+------------
+
+ # lvcreate -n mylv -L 500M /dev/myvg 
+
+2> By using number of PE's from VG we can create LV .
+
+ # lvcreate -n mylv -l 20 /dev/myvg 
+
+3> we can create lv from vg in persentage format(%) .
+
+ # lvcreate -n mylv -l +25%free myvg                 // This will occupy 25% of Vg size to create the lv .
+
+
+>> To verify lv
+---------------
+
+ # lv (or) lvdisplay 
+
+ 
+>> How to increase lv size 
+
+ step-1 >> Check Vg having how much size available and if vg having free size 
+           then we can increase the lv size using that free space of VG . 
+
+ # lvextend -L +500M /dev/myvg/mylv 
+  
+ step-2 >> If vg does not have free size available, then create a new pv using disk partition and add into exsisting vg . 
+
+Example :
+
+  # pvcreate /dev/sdb2  
+
+  # pvs 
+
+  # vgextend /dev/myvg  // To increase the size of vg 
+ 
+  # vgs  // now check vg size increased 
+ 
+  # lvextend -L +500M /dev/myvg/myvg
+
+ >> To apply filesystem to lv 
+
+   # mkfs.ext4 /dev/myvg/mylv 
+
+ >> Apply filesystem to lvm which already applied ext3/ext4 filesystem use below command 
+
+   # resize2fs /dev/myvg/mylv 
+
+  
+ >> To apply "xfs" filesystem to lv .
+   # mkfs.xfs  /dev/myvg/mylv 
+
+ >> Apply filesystem to lvm which already applied "xfs" filesystem use below command .
+
+   # xfs_growfs  /dev/myvg/mylv 
+
+ >> To mount temporary and permanently 
+
+  # mount /dev/myvg/mylv /redhat // mounting temporary 
+
+  # vi /etc/fstab 
+
+   /dev/myvg/mylv  /redhat  ext4 defaults 0 0  
+   :wq 
+
+  # mount -a 
+
+  # df -Th // To check mount point 
+
+ 
+
+>> To remove lv , vg and vg 
+=============================
+
+ > first check lv is mounted or not and if mounted then unmount and remove the entry in fstab if available .
+
+ # lvremove /dev/myvg/mylv 
+
+ # vgremove /dev/myvg 
+
+ # pvremove /dev/sdb1 /dev/sdb2 
+
+#########################################
+
+  
