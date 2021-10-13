@@ -1,0 +1,158 @@
+ >>> Tomcat: 
+ ===========
+
+ >> Apache Tomcat is a web server and servlet container that is used to serve Java applications. 
+   Tomcat is an open source implementation of the Java Servlet and JavaServer Pages technologies, 
+   released by the Apache Software Foundation.
+
+  # yum install epel-release -y
+  #  yum install wget vim -y
+  # yum install java-1.8.0-openjdk-devel -y
+  # yum install tomcat  tomcat-webapps tomcat-admin-webapps  -y
+  
+   # vim /etc/tomcat/tomcat.conf
+	
+	#Add the following JAVA_OPTS line to the file. 
+	#Feel free to change the Xmx and MaxPermSize values—these settings affect how much memory Tomcat
+    will use:
+	 
+	  JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC"
+ 
+
+    :wq 
+   
+    # systemctl  enable  tomcat ; systemctl start tomcat ; systemctl status tomcat 
+	
+	# ss -ntlup | grep 8080 
+	
+	// Now go to browser and check tomcat is loading or not 
+	
+	 ex: http://<server_ip>:8080
+	 
+	 
+	
+    # find / -name tomcat-users.xml
+
+    # vim  /etc/tomcat/tomcat-users.xml 
+	
+	// Go to last line and one line above add this 
+
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <role rolename="manager-status"/>
+  <user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status"/>
+  <user username="deployer" password="deployer" roles="manager-script"/>
+  <user username="tomcat" password="redhat123" roles="manager-gui"/>
+  
+ :wq
+ 
+  # systemctl restart tomcat 
+  
+  # ss -ntlup | grep 8080 
+  
+  // To change tomcat default port 
+  
+  # # find / -name server.xml.
+  
+  /etc/tomcat/server.xml
+
+  # vim /etc/tomcat/server.xml 
+  
+        <Connector port="8089" protocol="HTTP/1.1"   // To change in this line 
+                 connectionTimeout="20000"
+                 redirectPort="8443" />
+ 
+ :wq
+
+ # systemctl restart tomcat 
+ 
+ # ss -ntlup | grep 8089 
+
+
+ https://github.com/AKSarav/SampleWebApp/raw/master/dist/SampleWebApp.war
+#########################################################################################
+#############################################################################################
+
+
+
+
+
+:: APACHE TOMCAT ::
+====================
+==>> Apache Tomcat is a free and open-source implementation of the Java Servlet, JavaServer Pages, Java Expression Language 
+    and WebSocket technologies. Tomcat provides a "pure Java" HTTP web server environment in which Java code can run.
+	
+==> Apache Tomcat is an open-source web server that is designed to serve Java web pages.
+   It is widely deployed and powers various mission-critical web applications around the world.
+   
+
+Steps To configure Apache Tomcat:
+=================================
+
+ # sudo yum install epel-release -y
+ 
+ # sudo yum update -y && sudo reboot 
+ 
+ Install Java 1.8 / 11 version 
+ -----------------------------
+ 
+ # yum -y install wget vim java-1.8.0-openjdk.x86_64 // Installaing Java Package 
+ 
+ # java -version // checking the java version  
+ 
+ # mkdir /opt/tomcat 
+
+ # useradd -s /bin/nologin  -d /opt/tomcat tomcat
+ 
+ # cd /opt/tomcat/
+ 
+ # wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.52/bin/apache-tomcat-9.0.52.zip
+ 
+ # tar -xvzf https://downloads.apache.org/tomcat/tomcat-9/v9.0.52/bin/apache-tomcat-9.0.52.zip
+ 
+ # mv apache-tomcat* tomcat9
+ 
+ # cd tomcat9
+ 
+ # cd bin/
+ 
+ # ./startup.sh 
+ 
+ # ./shutdown.sh
+ 
+ # ss -ntlup | grep 8080 
+
+ # firefox http://localhost:8080 
+
+ # vim /opt/tomcat/tomcat9/conf/tomcat-users.xml 
+
+  Go to last line and one line above add this 
+
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <role rolename="manager-status"/>
+  <user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status"/>
+  <user username="deployer" password="deployer" roles="manager-script"/>
+  <user username="tomcat" password="redhat123" roles="manager-gui"/>
+  
+ :wq
+
+ # ./opt/tomcat/tomcat9/bin/shutdown.sh 
+
+ # ./opt/tomcat/tomcat9/bin/startup.sh 
+
+>> Lets check in broswer 
+
+ # firefox http://localhost:8080 
+
+ // click on mamanger-app it will ask username and password 
+
+ 
+
+ 
+ 
+ 
+ 
+ https://downloads.apache.org/tomcat/tomcat-9/v9.0.52/bin/apache-tomcat-9.0.52.tar.gz
