@@ -1,0 +1,75 @@
+                                 Modes of VI Editor in UNIX
+ 
+
+          Basic Cursor Movement
+                
+
+
+
+
+
+Editor in Linux:
+--------------------
+We have the editors in windows like notepad, notepad++ etc. 
+In Linux we have the editor like vi or vim (file editor) both are uses for same but only difference is upgraded version. 
+Vim has introduced from RHEL6.(Red Hat Enterprise Linux (often abbreviated to RHEL))
+In vim file text contains looks like visualization better and functionalities, more options in this editor like color etc.
+“vim” editor is improved version of “vi” editor. It can be used to edit all kinds of plain text. 
+It is especially useful for editing programs.
+In vim editor there are three modes,
+1.	Command/Normal Mode:
+There are options in command modes
+Press “ESC” will place your normal mode
+-- h(left) j(down) k(up) l(right)
+-- x: Used to delete character
+-- w: Used to move the cursor word by word
+-- 2w: Used to move two cursor two words forwards
+-- Type 0(zero) to move to the start of the line
+-- dd: To delete a whole Line
+-- shift+d: It will delete from cursor position to end of the line
+-- shift+g: To go to bottom of the line 
+-- gg: To go top of the line
+-- ctrl+r: To redo
+-- u: Undo
+-- shift+zz: To save and quit
+-- To delete from the cursor up to the next word type: dw
+-- To repeat a motion prepend it with a number: 2w
+-- Type / Followed by a phrase(pattern) to search for the phrase ex: /<wordname>
+-- To search for the same phrase again, simply type n
+-- To search for the same phrase in the opposite direction, type N
+-- yy: To copy a single line
+-- 2yy: To copy two lines at a time
+-- 5yy: To copy 5 lines at a time
+-- p: To paste
+-- 3p: Three times paste same contain
+
+2. Insert:
+	-- i:  Go to insert mode and curser position will remain same position
+	-- I:  Go to insert mode and curser position will move to beginning of this line
+	-- A: Go to insert mode and curser position will go to end of that line
+	-- a: Go to insert mode and curser position will move one character of that line
+	-- o(small): Go to insert mode and curser position will create new line below the curser
+	-- O(Capital): Go to insert mode and curser position will create a new line above the cursor
+3. Edit Mode:
+         To go exit mode: type ( shift+: )
+          :q --> To quit without saving
+          :q! --> To quit forcefully
+          :w --> To save the file contain
+          :wq --> To save and quit
+          :wq! --> To save and quit forcefully
+          :x --> Save and quit
+          : To Substitute new for the first old in a line type              :s/old/new
+                     To Substitute phrases between two line #’s type        :1,2s/old/new/g
+                     To Substitute all occurrences in the file type         :%s/old/new/g
+           :x --> To encrypt or decrypt the file contain
+           :set nu (set the line number)
+           :set nonu (Remove the line number)
+           :noh (no highlight)
+           :!ls / (suppose you want to see the ls of root directory use this command inside the vi  editor)
+          :!cat <filename>
+
+How to open two files?
+$ vim   -o    <file1>    <file2> : (It will split the window with horizontally)
+$ vim   -O   <file1>   <file2> : (It will split the window with Vertically)
+How to pass one window to another window?
+Ctrl+ww
