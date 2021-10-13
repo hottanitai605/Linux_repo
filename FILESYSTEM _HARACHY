@@ -1,0 +1,20 @@
+ / :  The file system root directory, perent directory in linux from where hole tree starts .
+ /root : It is the Admin or root user home directory 
+ /home : All normal user home directory .
+ /boot : Contains static files for the boot loader.  This directory holds only the files which are needed          during the boot process.
+ /bin : This directory contains executable programs, which helps to execute commands by all users .
+ /sbin : This directory contains executable programs, which helps to execute command only by super user or Admin user by default .
+ /dev : It contains  Special or device files, which refer to physical devices such as Hard Drive .
+ /etc : Contains configuration files which are local to the machine . 
+ /lib :  This directory should hold those shared libraries that are necessary to boot the system .
+ /media : This directory contains mount points for removable media such as CD and DVD disks or USB sticks.
+ /mnt : This directory is a mount point for a temporarily mounted file system .
+ /opt :  This directory should contain add-on packages that contain static files .
+ /proc :  It provides information about running processes and the kernel .
+ /run: This directory contains information which describes the system since it was booted.
+ /srv : This directory contains site-specific data that is served by this system.
+ /sys : This is a mount point for the sysfs file system, which provides information about the kernel like /proc.
+/tmp : This directory contains temporary files which may be deleted with no notice, such as by a regular job or at system boot up. And the life span of this containts is 10 days.
+ /usr : This directory is usually mounted from a separate partition.  It should hold only shareable, read-only data.
+ /var : This directory contains files which may change in size, such as spool and log files. 
+  /var/tmp : Like /tmp, this directory holds temporary files stored for an unspecified duration. The life span for these contains is 30 days.
