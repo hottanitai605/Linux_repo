@@ -1,0 +1,109 @@
+NIC(Network Interface Card) :
+NIC card having two types of addresses .
+1>> MAC(Media Access Control) Address .
+
+It is a Physical address which is static .
+Mac address is 48 bits addressing which  devide into 6 fields with colon separation. Each field 8 bits then total 8*6 = 48 bits.
+Mac address is in hexa decimal format .
+ex: 00:00:00:00:00:00  
+
+
+2>> IPAddress 
+
+>> An Internet Protocol address (IP address) is a numerical label assigned to each device connected to a computer network
+   that uses the Internet Protocol for communication.
+   An IP address serves two main functions: host or network interface identification and location addressing.
+
+>> Internet Protocol version 4 (IPv4) defines an IP address as a 32-bit number. However, because of the growth of the 
+  Internet and the depletion of available IPv4 addresses, a new version of IP (IPv6), using 128 bits for the IP address,
+   was standardized in 1998.It is an on going process . 
+
+>> IP addresses are written and displayed in human-readable notations, such as 172.16.254.1 in IPv4,
+   and 2001:db8:0:1234:0:567:8:1 in IPv6. 
+  The size of the routing prefix of the address is designated in CIDR notation by suffixing the address
+  with the number of significant bits, e.g., 192.168.1.15/24, 
+  which is equivalent to the historically used subnet mask 255.255.255.0 .
+
+
+ipv4-address -> 32 bit addressing
+          -> 4 Octets and 1 Octet is 8 bit   
+            ex:  0.0.0.0
+          -> we can assign ip address from 0-255
+ipaddress -> it is devide into two parts such as Network ID(1) + Host ID(0)
+          
+
+Classes Of IP Address:
+---------------------
+Class A -> 1.0.0.0 to 126.0.0.0             Subnetmask -> 255.0.0.0             Prefix -> /8
+----------------------------------------------------------------------------------------------
+In Class A first one Octet reserved for Network Perstion and remaing three octet reserverd for Host Pertion .
+ex: 10.10.20.15
+loopback Address: 127.0.0.1 // To check Network Interface Card 
+
+Class B -> 128.0.0.0 to 191.255.0.0         Subnetmask -> 255.255.0.0           Prefix -> /16
+-----------------------------------------------------------------------------------------------
+In Class B first two octet reserverd for Network Pertion and remaining two are for Host Pertion .
+ex: 172.16.5.10
+
+Class C -> 192.0.0.0 to 223.255.255.0       Subnetmask -> 255.255.255.0         Prefix -> /24
+----------------------------------------------------------------------------------------------
+In Class C first three octet are reserved for Network Pertion remaing one reserved Host Pertion 
+ex: 192.168.60.12
+
+Class D -> 224 - 239 this is used for Multicasting
+-------------------------------------------------
+Class E -> 240 - 255 >> this is reserved for R&D
+------------------------------------------------
+
+Network Portion represence as 1
+Host    Portion represence as 0
+
+How to convert Ipaddress into Binary format ?
+
+Brodcast ID : 
+
+172.16.5.50 Using this ip find out network id , Broadcast , No of Useable ip and total number of ip .
+
+
+172.16.0.0 - Network ID 
+
+172.16.255.255 -> Broadcast ID 
+
+
+
+ q>   172.16.5.50 >> convert ip address into binary format 
+      Ans: 10101100.00010000.00000101.00110010 
+  
+
+    2^7  2^6   2^5  2^4  2^3  2^2  2^1  2^0
+    128   64    32   16   8    4    2    1 
+  
+     1    0     1    0    1    1    0    0  =172 (172=128+32+8+4)
+     0	  0	0    1    0    0    0    0  =16
+     0    0     0    0    0    1    0    1  =5 
+     0	  0     1    1    0    0    1    0  =50
+
+   
+   Class A total number of ip and total usuable ip .
+
+    2^24-2=16777214 (Usuable Ip)
+    2^24=16777216 (Total ip)
+
+   Class C total number of and usuable ip 
+
+    2^8-2=254 Usuable ip in class C
+    2^8=256 - Total number of ip in class C
+
+   Class B total number of ip and usuable ip 
+   
+     2^16-2 =65534 (No of useable IP)
+     2^16=65536(total number of ip in class B)		
+
+
+
+  ex: 192.168.17.10 
+
+      Network ID =192.168.17.0 
+      Broadcast ID = 192.168.17.255
+
+  

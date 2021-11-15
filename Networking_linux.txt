@@ -1,0 +1,246 @@
+NIC(Network Interface Card) :
+Q. What is Computer network ?
+
+  Ans: A computer network is a group of computers that use a set of common communication protocols over digital interconnections
+      for the purpose of sharing resources located on or provided by the network nodes. 
+
+Q. what is internet ?
+
+ Ans: The Internet (or internet) is the global system of interconnected computer networks that uses
+      the Internet protocol suite (TCP/IP) to communicate between networks and devices .
+
+Q. What is intranet ? 
+
+  Ans: An intranet is a computer network for sharing information, collaboration tools, operational systems,
+       and other computing services within an organization, usually to the exclusion of access by outsiders .
+
+Q. What is IANA ?
+
+ Ans: The Internet Assigned Numbers Authority (IANA) is a standards organization that oversees global IP address allocation, 
+      autonomous system number allocation, root zone management in the Domain Name System (DNS), media types, 
+      and other Internet Protocol-related symbols and Internet numbers.
+
+Q. What is ISP ? 
+
+ Ans: An Internet service provider (ISP) is an organization that provides services for accessing, using, or participating in the Internet.
+   Internet service providers can be organized in various forms, such as commercial, community-owned, non-profit, or otherwise privately owned.
+  -> Internet services typically provided by ISPs can include Internet access, Internet transit, domain name registration, web hosting, Usenet service, and colocation.
+##################################################################################
+
+>> NIC card having two types of addresses .
+
+1>> MAC(Media Access Control) Address .
+
+>> It is a Physical address which is static .
+>> Mac address is 48 bits addressing which  devide into 6 fields with colon separation. Each field 8 bits then total 8*6 = 48 bits.
+Mac address is in hexa decimal format .
+ex: 00:00:00:00:00:00  
+
+
+2>> IPAddress 
+
+>> An Internet Protocol address (IP address) is a numerical label assigned to each device connected to a computer network
+   that uses the Internet Protocol for communication.
+   An IP address serves two main functions: host or network interface identification and location addressing.
+
+>> Internet Protocol version 4 (IPv4) defines an IP address as a 32-bit number. However, because of the growth of the 
+  Internet and the depletion of available IPv4 addresses, a new version of IP (IPv6), using 128 bits for the IP address,
+   was standardized in 1998.It is an on going process . 
+
+>> IP addresses are written and displayed in human-readable notations, such as 172.16.254.1 in IPv4,
+   and 2001:db8:0:1234:0:567:8:1 in IPv6. 
+  The size of the routing prefix of the address is designated in CIDR notation by suffixing the address
+  with the number of significant bits, e.g., 192.168.1.15/24, 
+  which is equivalent to the historically used subnet mask 255.255.255.0 .
+
+
+ipv4-address -> 32 bit addressing
+          -> 4 Octets and 1 Octet is 8 bit   
+            ex:  0.0.0.0
+          -> we can assign ip address from 0-255
+ipaddress -> it is devide into two parts such as Network ID(1) + Host ID(0)
+          
+
+Classes Of IP Address:
+---------------------
+Class A -> 1.0.0.0 to 126.0.0.0             Subnetmask -> 255.0.0.0             Prefix -> /8
+----------------------------------------------------------------------------------------------
+
+>> In Class A first one Octet reserved for Network Pertion and remaing three octet reserverd for Host Pertion .
+ex: 10.10.20.15
+
+>> loopback Address: 127.0.0.1 // To check Network Interface Card 
+
+Class B -> 128.0.0.0 to 191.255.0.0         Subnetmask -> 255.255.0.0           Prefix -> /16
+-----------------------------------------------------------------------------------------------
+In Class B first two octet reserverd for Network Pertion and remaining two are for Host Pertion .
+ex: 172.16.5.10
+
+Class C -> 192.0.0.0 to 223.255.255.0       Subnetmask -> 255.255.255.0         Prefix -> /24
+----------------------------------------------------------------------------------------------
+
+>> In Class C first three octet are reserved for Network Pertion remaing one reserved Host Pertion 
+ex: 192.168.60.12
+
+Class D -> 224 - 239 this is used for Multicasting
+-------------------------------------------------
+
+Class E -> 240 - 255 >> this is reserved for R&D
+------------------------------------------------
+
+Network Portion represence as 1
+Host    Portion represence as 0
+
+How to convert Ipaddress into Binary format ?
+
+Brodcast ID : 
+
+172.16.5.50 Using this ip find out network id , Broadcast , No of Useable ip and total number of ip .
+
+
+172.16.0.0 - Network ID 
+
+172.16.255.255 -> Broadcast ID 
+
+
+
+ q>   172.16.5.50 >> convert ip address into binary format 
+      Ans: 10101100.00010000.00000101.00110010 
+  
+
+    2^7  2^6   2^5  2^4  2^3  2^2  2^1  2^0
+    128   64    32   16   8    4    2    1 
+  
+     1    0     1    0    1    1    0    0  =172 (172=128+32+8+4)
+     0	  0	0    1    0    0    0    0  =16
+     0    0     0    0    0    1    0    1  =5 
+     0	  0     1    1    0    0    1    0  =50
+
+   
+   Class A total number of ip and total usuable ip .
+
+    2^24-2=16777214 (Usuable Ip)
+    2^24=16777216 (Total ip)
+
+   Class B total number of ip and usuable ip 
+   
+     2^16-2 =65534 (No of useable IP)
+     2^16=65536(total number of ip in class B)		
+
+   Class C total number of and usuable ip 
+
+    2^8-2=254 Usuable ip in class C
+    2^8=256 - Total number of ip in class C
+
+  ex: 192.168.17.10 
+
+      Network ID =192.168.17.0 
+      Broadcast ID = 192.168.17.255
+
+
+#########################################
+ 
+subnetmask=It is used for determine which class Ip we are using .
+
+Prefix = It is CIDR(classless inter Domain Routing) notain of subnetmask .
+
+What is Gateway ? 
+
+Ans: Gateway is a pice of netwoking hardware or software, which allows data to flow from one network to another .
+     It allows computers within the local network to send and receive data over the internet .
+
+ How to check gateway address ?
+
+ Ans: # ip route 
+       # route -n
+       # netstat -nr 
+    
+ What is Broadcast address ?
+
+ It is special address in networking which  reserved for sending message to all  nodes on a given network or on a network segment .
+
+How to check Broadcast address ?
+ 
+  # ip addr show / ip a / ifconfig 
+
+what is DNS ? 
+
+ Ans: DNS(Domain Naming System) is used for resolving hostname to ipaddress and vice versa .
+
+What is dns client configuration file in linux?
+
+Ans: /etc/resolv.conf 
+
+What is loacl dns file ?
+
+Ans: /etc/hosts 
+
+How to resolve Hostname to ipaddress ?
+
+Ans: # nslookup <hostname>/<ipaddress>
+     
+     # host <hostname>/<ipaddress>
+     
+     # dig <hostname>/<ipaddress>
+                    
+Q. What is DHCP ?
+
+Ans: DHCP stands for (Dynamic Host Configuration Protocol) .
+     -> DHCP is a client/server protocol that enables a server 
+        to autometically assign ip address to a client on a network.
+
+
+Q. what is loopback address ?
+
+Ans : It is special ip address, 127.0.0.1, reserved  to use for testing network cards or NIC .
+
+Q. what is ping stands for ?
+Ans: 
+      -> ping (Packet Internet Groper) is used to check the network connectivity between hosts .
+      -> ping uses ICMP(Internet Control message Protocol) to send ICMP echo message to the specified host 
+         if that host reachable then it sends ICMP echo replay message .
+
+Q. How to check local ping ?
+
+Ans: # ping localhost (or) ping 127.0.0.1 
+
+Q. How to check you NIC is working or not ? 
+
+   # ping 0 (or) ping 127.0.0.1 
+
+Q. What is TCP?
+
+ Ans: TCP(Tramission Control Protocol) is a connection oriented communication protocol that facilates the exchange 
+      of message between computing device and ensure the successful delivery of data messages over networks .
+     
+     -> The protocol number for tcp is "6" .
+
+Q. What is TCP?
+  >> Transmission Control Protocol (TCP) is a connection-oriented protocol that computers use to communicate over the internet.
+     It is one of the main protocols in TCP/IP networks. TCP provides error-checking and guarantees delivery of data and that packets
+     will be delivered in the order they were sent.
+
+Q. What is UDP?
+Ans:  User Datagram Protocol (UDP) is a connectionless protocol that works just like TCP but assumes that error-checking 
+      and recovery services are not required. Instead, UDP continuously sends datagrams to the recipient whether they receive them or not.
+    --> Protocol number for UDP is "17" .
+
+Q. where the protocol numbers are stored in linux ? 
+
+Ans: The protocol numbers are stored in "/etc/protocols" .
+
+Q. What is the Protocol number for ICMP ?
+
+Ans: Protocol number for ICMP is "1" .
+
+
+To check types of network adapter in oracle virtual box .
+=========================================================
+https://blogs.oracle.com/scoter/networking-in-virtualbox-v2
+
+####################################
+ 
+      
+ 
+ 
+  
